@@ -27,7 +27,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.8vh;
-    overflow: hidden;
+    overflow: auto;
 }
 
 header {
