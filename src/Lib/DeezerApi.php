@@ -15,7 +15,7 @@ class DeezerApi
         foreach ($lienDeezer as $lien) {
             $curl = curl_init();
             $artistId = $lien;
-            $url = "https://api.deezer.com/artist/" . $artistId . "/top?limit=50";
+            $url = "https://api.deezer.com/artist/" . $artistId . "/top?limit=30";
 
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -48,6 +48,7 @@ class DeezerApi
             $result = curl_exec($curl);
             $err = curl_error($curl);
             curl_close($curl);
+            
             $data = json_decode($result, true);
             $_SESSION['artistes'][] = $data['name'];
         }
