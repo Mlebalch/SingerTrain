@@ -23,6 +23,7 @@ class DeezerApi
 
             $result = curl_exec($curl);
             $err = curl_error($curl);
+            curl_close($curl);
 
             if ($err) {
                 echo "cURL Error #:" . $err;
@@ -33,12 +34,22 @@ class DeezerApi
 
                     // Enregistrer la chanson dans la session
                     $_SESSION['songs'][] = $randomTrack['preview'];
-                    $_SESSION['artistes'][] = $randomTrack['artist']['name'];
                 } else {
                     echo "No tracks data available.";
                 }
             }
+
+            $url = "https://api.deezer.com/artist/" . $artistId;
+
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+            $result = curl_exec($curl);
+            $err = curl_error($curl);
             curl_close($curl);
+            $data = json_decode($result, true);
+            $_SESSION['artistes'][] = $data['name'];
         }
 }
 }
