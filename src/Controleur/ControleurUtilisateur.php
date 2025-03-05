@@ -111,6 +111,15 @@ class ControleurUtilisateur extends ControleurGenerique
             "messagesFlash" => MessageFlash::lireTousMessages(),
         ]);
     }
+    public static function afficherFormulaireCreationUtilisateur()
+    {
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Création d'un utilisateur",
+            "cheminCorpsVue" => "utilisateur/vueFormulaireCreationUtilisateur.php",
+            "messagesFlash" => MessageFlash::lireTousMessages(),
+        ]);
+
+    }
 
     public static function connexion(): void
     {
@@ -143,9 +152,9 @@ class ControleurUtilisateur extends ControleurGenerique
     public static function creerUtilisateurDepuisFormulaire(): void
     {
 
-        if (!ConnexionUtilisateur::estAdmin()) {
-            MessageFlash::ajouter("danger", "Vous devez être administrateur pour accéder à cette page");
-            header("Location: ?controleur=dashboard&action=afficherDashBoard");
+        if (!isset($_GET['login']) || !isset($_GET['mdp']) || !isset($_GET['mdp2']) || !isset($_GET['mail'])) {
+            MessageFlash::ajouter("danger", "Veuillez remplir tous les champs");
+            header("Location: ?controleur=utilisateur&action=afficherFormulaireCreationUtilisateur");
             exit();
         }
 
@@ -154,7 +163,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
         if ($mdp != $mdp2) {
             MessageFlash::ajouter("danger", "Les mots de passe ne correspondent pas");
-            header("Location: ?controleur=dashboard&action=afficherDashBoard");
+            header("Location:  ?controleur=utilisateur&action=afficherFormulaireCreationUtilisateur");
             exit();
         }
 
@@ -166,18 +175,30 @@ class ControleurUtilisateur extends ControleurGenerique
         else if ((new UtilisateurRepository)->add($newutilisateur)) {
             MessageFlash::ajouter("success", "Utilisateur créé avec succès");
 
-            Mail::envoyerMail($newutilisateur, "Compte CapyNote",
+            Mail::envoyerMail($newutilisateur, "Compte SingerTrain",
                 "Bonjour {$newutilisateur->getNomUtilisateur()} {$newutilisateur->getPrenom()},\n\n
-                L'administrateur de CapyNote vient de vous créer un compte.\n
-                Vous pouvez vous connecter avec le login et le mot de passe ci-dessous :\n
-                Login : {$newutilisateur->getLogin()}\n
-                Mot de passe : {$mdp}\n\n
+                Merci D'avoir creer votre compte chez nous.\n
+            
                 ");
 
         } else {
             MessageFlash::ajouter("danger", "Impossible de créer l'utilisateur");
         }
-        header("Location: ?controleur=dashboard&action=afficherDashBoard");
+        header("Location:  ?controleur=utilisateur&action=afficherFormulaireConnexion");
         exit();
+    }
+
+    public static function construireDepuisFormulaire(array $tableauDonneesFormulaire): Utilisateur
+    {
+
+        if ($tableauDonneesFormulaire['mail'] == null) {
+            $tableauDonneesFormulaire['mail'] = "inconnu";
+        }
+
+        return new Utilisateur(
+            $tableauDonneesFormulaire['login'],
+            MotDePasse::hacher($tableauDonneesFormulaire['mdp']),
+            $tableauDonneesFormulaire['mail']
+        );
     }
 }
