@@ -2,7 +2,7 @@
 
 namespace App\Modele\DataObject;
 
-class Utilisateur
+class Utilisateur extends AbstractDataObject
 {
     private string $login ;
     private string $mdp;

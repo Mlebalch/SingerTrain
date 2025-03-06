@@ -2,7 +2,7 @@
 
 namespace App\Modele\DataObject;
 
-class Game
+class Game  extends AbstractDataObject
 {
 
     private int  $id ;

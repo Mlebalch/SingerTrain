@@ -62,6 +62,13 @@ class ControleurUtilisateur extends ControleurGenerique
 
         }
     }
+    public static function afficherVueFormulaireAjoutArtiste(){
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Ajouter un artiste",
+            "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
+            "messagesFlash" => MessageFlash::lireTousMessages(),
+        ]);
+    }
 
     public static function reponse()
     {
@@ -103,6 +110,27 @@ class ControleurUtilisateur extends ControleurGenerique
 
     }
 
+    public static function enregistrerArtiste()
+    {
+        $artisteid = (new DeezerApi())->add($_REQUEST['recherche']);
+        if ($artisteid != 0) {
+            (new ArtisteRepository())->add(new Artiste($_REQUEST['aritste'], $_REQUEST['prenom'],$_REQUEST['nom'], $artisteid, "https://www.nautiljon.com/people/".$_REQUEST['aritste'].".html"));
+            self::afficherVue("vueGenerale.php", [
+                "titre" => "Ajouter un artiste",
+                "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
+                "messagesFlash" => MessageFlash::lireTousMessages(),
+            ]);
+        } else {
+            var_dump("erreur");
+            self::afficherVue("vueGenerale.php", [
+                "titre" => "Ajouter un artiste",
+                "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
+                "messagesFlash" => MessageFlash::lireTousMessages(),
+            ]);
+        }
+
+    }
+
     public static function afficherFormulaireConnexion(): void
     {
         self::afficherVue("vueGenerale.php", [
@@ -129,9 +157,9 @@ class ControleurUtilisateur extends ControleurGenerique
             $login = $_REQUEST['login'];
             $mdp = $_REQUEST['mdp'];
             /** @var Utilisateur $utilisateur **/
-            $utilisateur = (new UtilisateurRepository())->getParClesPrimaires([$login]);
-            if ($utilisateur != null && MotDePasse::verifier($mdp, $utilisateur->getMotDePasse())) {
-                ConnexionUtilisateur::connecter($login);
+            $utilisateur = (new UtilisateurRepository())->getByPrimaryKeys([$login]);
+            if ($utilisateur != null && MotDePasse::verifier($mdp, $utilisateur->getMdp())) {
+                ConnexionUtilisateur::connecter($utilisateur);
                 MessageFlash::ajouter("success", "Connexion réussie");
             } else {
                 MessageFlash::ajouter("danger", "Login ou mot de passe incorrect");
@@ -169,14 +197,14 @@ class ControleurUtilisateur extends ControleurGenerique
 
         $newutilisateur = ControleurUtilisateur::construireDepuisFormulaire($_GET);
 
-        if (filter_var($newutilisateur->getMail(), FILTER_VALIDATE_EMAIL) === false) {
+        if (filter_var($newutilisateur->getEmail(), FILTER_VALIDATE_EMAIL) === false) {
             MessageFlash::ajouter("danger", "Adresse mail invalide");
         }
         else if ((new UtilisateurRepository)->add($newutilisateur)) {
             MessageFlash::ajouter("success", "Utilisateur créé avec succès");
 
             Mail::envoyerMail($newutilisateur, "Compte SingerTrain",
-                "Bonjour {$newutilisateur->getNomUtilisateur()} {$newutilisateur->getPrenom()},\n\n
+                "Bonjour {$newutilisateur->getLogin()}\n\n
                 Merci D'avoir creer votre compte chez nous.\n
             
                 ");

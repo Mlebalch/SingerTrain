@@ -1,5 +1,5 @@
 <h3>Créer un utilisateur</h3>
-<form method="get" action="" class="">
+<form method="post" action="" class="">
     <label>
         Login :
         <input type="text" name="login" required/>

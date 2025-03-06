@@ -5,7 +5,7 @@ namespace App\Modele\Repository;
 use App\Modele\DataObject\AbstractDataObject;
 use App\Modele\DataObject\Game;
 
-class GameRepository
+class GameRepository extends AbstractRepository
 {
 
 

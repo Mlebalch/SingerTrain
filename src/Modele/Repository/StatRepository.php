@@ -5,7 +5,7 @@ namespace App\Modele\Repository;
 use App\Modele\DataObject\AbstractDataObject;
 use App\Modele\DataObject\Stat;
 
-class StatRepository
+class StatRepository extends    AbstractRepository
 {
     protected function getTableName(): string
     {

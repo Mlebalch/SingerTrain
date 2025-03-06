@@ -5,7 +5,7 @@ use App\Modele\DataObject\AbstractDataObject;
 use App\Modele\DataObject\Utilisateur;
 
 
-class UtilisateurRepository
+class UtilisateurRepository extends AbstractRepository
 {
 
 

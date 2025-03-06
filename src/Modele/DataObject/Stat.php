@@ -2,7 +2,7 @@
 
 namespace App\Modele\DataObject;
 
-class Stat
+class Stat extends AbstractDataObject
 {
     private string $nom_de_scene ;
     private string $login;
