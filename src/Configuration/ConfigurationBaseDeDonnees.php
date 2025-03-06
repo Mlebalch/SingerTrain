@@ -9,7 +9,7 @@ class ConfigurationBaseDeDonnees
         //
         // ou webinfo.iutmontp.univ-montp2.fr
         // pour accéder à webinfo depuis l'extérieur
-        'nomHote' => '',
+        'nomHote' => ' ',
         // A l'IUT, vous avez une base de données nommee comme votre login
         // Sur votre machine, vous devrez creer une base de données
         'nomBaseDeDonnees' => '',
