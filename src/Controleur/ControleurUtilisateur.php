@@ -32,7 +32,7 @@ class ControleurUtilisateur extends ControleurGenerique
        $lienDeezer =  (new ArtisteRepository())->getRand();
        $resulte = [];
        foreach ($lienDeezer as $row) {
-           $resulte[] = $row->getLienDeezer();
+            $resulte[] = $row->getLienDeezer();
        }
       (new DeezerApi)->get($resulte);
 

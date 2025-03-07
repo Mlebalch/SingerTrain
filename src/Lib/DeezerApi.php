@@ -30,9 +30,9 @@ class DeezerApi
             } else {
                 $data = json_decode($result, true);
                 if (isset($data['data']) && count($data['data']) > 0) {
-                    $randomTrack = $data['data'][array_rand($data['data'])];
-
-                    // Enregistrer la chanson dans la session
+                        $randomTrack = $data['data'][array_rand($data['data'])];
+                    
+                    // Enregistrer la chanson dans la session   
                     $_SESSION['songs'][] = $randomTrack['preview'];
                 } else {
                     echo "No tracks data available.";
@@ -48,9 +48,9 @@ class DeezerApi
             $result = curl_exec($curl);
             $err = curl_error($curl);
             curl_close($curl);
-            
+
             $data = json_decode($result, true);
             $_SESSION['artistes'][] = $data['name'];
         }
-}
+    }
 }

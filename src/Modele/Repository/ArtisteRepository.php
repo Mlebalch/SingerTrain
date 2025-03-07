@@ -38,29 +38,27 @@ class ArtisteRepository extends AbstractRepository
     {
         return new Artiste(
             $objetFormatTableau['nom_de_scene'],
-            $objetFormatTableau['prenom'],
-            $objetFormatTableau['nom'],
-            $objetFormatTableau['lien_deezer'],
+            $objetFormatTableau['prenom'] ?? null,
+            $objetFormatTableau['nom'] ?? null,
+            $objetFormatTableau['lien_deezer'] ?? null,
             $objetFormatTableau['lien_nautijon'],
         );
     }
 
-    public function getRand(){
-        $pdo = ConnexionBaseDeDonnees::getPdo();
-        $stmt = $pdo->query("SELECT * FROM " . $this->getTableName() . " ORDER BY RAND()");
-        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    public function getRand()
+{
+    $pdo = ConnexionBaseDeDonnees::getPdo();
+    $stmt = $pdo->query("SELECT * FROM " . $this->getTableName() . " ORDER BY RAND()");
+    $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        $artists = [];
-        foreach ($results as $row) {
+    $artists = [];
+    foreach ($results as $row) {
+        if (!empty($row['lien_deezer'])) {
             $artists[] = $this->constructFromSQLArray($row);
         }
-
-        return $artists;
     }
 
-    public function getArtisteByNomDeScene(string $nomDeScene): ?Artiste
-    {
-        return $this->getByPrimaryKeys([$nomDeScene]);
-    }
+    return $artists;
+}
 
 }

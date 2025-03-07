@@ -7,10 +7,10 @@ class Artiste extends AbstractDataObject
     private string $nom_de_scene ;
     private string $prenom;
     private string $nom;
-    private string $lien_deezer;
+    private int $lien_deezer;
     private string $lien_nautijon;
 
-    public function __construct(string $nom_de_scene, string $prenom, string $nom, string $lien_deezer, string $lien_nautijon)
+    public function __construct(string $nom_de_scene, string $prenom, string $nom, int $lien_deezer, string $lien_nautijon)
     {
         $this->nom_de_scene = $nom_de_scene;
         $this->prenom = $prenom;
