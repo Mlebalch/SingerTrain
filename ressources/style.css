@@ -1,7 +1,21 @@
+/* Variables CSS */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2E8B57;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+    --white-color: #fff;
+    --black-color: #000;
+}
+
 /* Styles généraux */
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: var(--background-color);
     margin: 0;
     padding: 0;
     text-align: center;
@@ -9,8 +23,8 @@ body {
 
 /* En-tête */
 header {
-    background: linear-gradient(to right, #4CAF50, #2E8B57);
-    color: white;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: var(--white-color);
     padding: 20px;
     font-size: 24px;
 }
@@ -27,23 +41,24 @@ nav ul li {
 
 nav a {
     text-decoration: none;
-    color: white;
+    color: var(--white-color);
     font-weight: bold;
     font-size: 18px;
+    transition: color 0.3s;
 }
 
 /* Contenu principal */
 .content {
     margin: 20px auto;
     padding: 20px;
-    background: white;
+    background: var(--white-color);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 600px;
 }
 
 h1, h2 {
-    color: #333;
+    color: var(--text-color);
 }
 
 /* Audio */
@@ -62,42 +77,50 @@ form {
 input[type="text"] {
     padding: 10px;
     width: 80%;
-    border: 2px solid #4CAF50;
+    border: 2px solid var(--primary-color);
     border-radius: 5px;
 }
 
 input[type="submit"] {
-    background: #4CAF50;
-    color: white;
+    background: var(--primary-color);
+    color: var(--white-color);
     border: none;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
-    transition: 0.3s;
+    transition: background 0.3s;
 }
 
 input[type="submit"]:hover {
-    background: #2E8B57;
+    background: var(--secondary-color);
+}
+
+input[type="submit"]:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }
 
 /* Liens */
 a {
     text-decoration: none;
-    color: #4CAF50;
+    color: var(--primary-color);
     font-weight: bold;
-    transition: 0.3s;
+    transition: color 0.3s;
 }
 
 a:hover {
-    color: #2E8B57;
+    color: var(--secondary-color);
 }
 
 /* Pied de page */
 footer {
-    background: #333;
-    color: white;
+    background: var(--text-color);
+    color: var(--white-color);
     padding: 10px;
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+header img {
+    max-height: 5vh;
 }

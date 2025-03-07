@@ -5,6 +5,7 @@
 /** @var array $messagesFlash */
 
 use App\Lib\MessageFlash;
+use App\Lib\ConnexionUtilisateur;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,13 +18,26 @@ use App\Lib\MessageFlash;
 
 <body>
     <header>
-        <h1>Header</h1>
 
     <nav>
         <ul>
             <li><a href="?controleur=utilisateur&action=afficherAccueil">Accueil</a></li>
             <li><a href="?controleur=utilisateur&action=launch">Game</a></li>
-            <li><a href="?controleur=utilisateur&action=score">Score</a></li>
+
+            <?php
+            if (ConnexionUtilisateur::estConnecte() && ConnexionUtilisateur::getUtilisateurConnecte() != null) {
+                echo "<li><a href='?controleur=utilisateur&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li>";
+                echo "<li><a href='?controleur=utilisateur&action=score'>Score</a></li>";
+                echo "<li><a href='?controleur=utilisateur&action=afficherFormulaireModification'>Modification</a></li> ";
+                echo "<li><a href='?controleur=utilisateur&action=deconnexion'>Déconnexion</a></li>";
+
+            }
+            else{
+                echo "<li> <a href='?controleur=utilisateur&action=afficherFormulaireConnexion'> <img src='../ressources/icons/user.svg' alt='' class='icon'> Connexion</a></li>";
+            }
+            ?>
+
+
         </ul>
     </nav>
     </header>

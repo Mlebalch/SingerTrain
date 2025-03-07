@@ -8,7 +8,7 @@ class Mail
 {
     public static function envoyerMail(Utilisateur $utilisateur, string $sujet, string $message): void
     {
-        $destinataire = $utilisateur->getMail();;
+        $destinataire = $utilisateur->getEmail();;
         $enTete = "MIME-Version: 1.0\r\n";
         $enTete .= "Content-type:text/html;charset=UTF-8\r\n";
 

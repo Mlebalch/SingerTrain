@@ -62,6 +62,13 @@ class ControleurUtilisateur extends ControleurGenerique
 
         }
     }
+    public static function afficherVueFormulaireAjoutArtiste(){
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Ajouter un artiste",
+            "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
+            "messagesFlash" => MessageFlash::lireTousMessages(),
+        ]);
+    }
 
     public static function reponse()
     {
@@ -103,6 +110,27 @@ class ControleurUtilisateur extends ControleurGenerique
 
     }
 
+    public static function enregistrerArtiste()
+    {
+        $artisteid = (new DeezerApi())->add($_REQUEST['recherche']);
+        if ($artisteid != 0) {
+            (new ArtisteRepository())->add(new Artiste($_REQUEST['aritste'], $_REQUEST['prenom'],$_REQUEST['nom'], $artisteid, "https://www.nautiljon.com/people/".$_REQUEST['aritste'].".html"));
+            self::afficherVue("vueGenerale.php", [
+                "titre" => "Ajouter un artiste",
+                "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
+                "messagesFlash" => MessageFlash::lireTousMessages(),
+            ]);
+        } else {
+            var_dump("erreur");
+            self::afficherVue("vueGenerale.php", [
+                "titre" => "Ajouter un artiste",
+                "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
+                "messagesFlash" => MessageFlash::lireTousMessages(),
+            ]);
+        }
+
+    }
+
     public static function afficherFormulaireConnexion(): void
     {
         self::afficherVue("vueGenerale.php", [
@@ -110,6 +138,15 @@ class ControleurUtilisateur extends ControleurGenerique
             "cheminCorpsVue" => "utilisateur/vueFormulaireConnexion.php",
             "messagesFlash" => MessageFlash::lireTousMessages(),
         ]);
+    }
+    public static function afficherFormulaireCreationUtilisateur()
+    {
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Création d'un utilisateur",
+            "cheminCorpsVue" => "utilisateur/vueFormulaireCreationUtilisateur.php",
+            "messagesFlash" => MessageFlash::lireTousMessages(),
+        ]);
+
     }
 
     public static function connexion(): void
@@ -120,9 +157,9 @@ class ControleurUtilisateur extends ControleurGenerique
             $login = $_REQUEST['login'];
             $mdp = $_REQUEST['mdp'];
             /** @var Utilisateur $utilisateur **/
-            $utilisateur = (new UtilisateurRepository())->getParClesPrimaires([$login]);
-            if ($utilisateur != null && MotDePasse::verifier($mdp, $utilisateur->getMotDePasse())) {
-                ConnexionUtilisateur::connecter($login);
+            $utilisateur = (new UtilisateurRepository())->getByPrimaryKeys([$login]);
+            if ($utilisateur != null && MotDePasse::verifier($mdp, $utilisateur->getMdp())) {
+                ConnexionUtilisateur::connecter($utilisateur);
                 MessageFlash::ajouter("success", "Connexion réussie");
             } else {
                 MessageFlash::ajouter("danger", "Login ou mot de passe incorrect");
@@ -143,9 +180,9 @@ class ControleurUtilisateur extends ControleurGenerique
     public static function creerUtilisateurDepuisFormulaire(): void
     {
 
-        if (!ConnexionUtilisateur::estAdmin()) {
-            MessageFlash::ajouter("danger", "Vous devez être administrateur pour accéder à cette page");
-            header("Location: ?controleur=dashboard&action=afficherDashBoard");
+        if (!isset($_GET['login']) || !isset($_GET['mdp']) || !isset($_GET['mdp2']) || !isset($_GET['mail'])) {
+            MessageFlash::ajouter("danger", "Veuillez remplir tous les champs");
+            header("Location: ?controleur=utilisateur&action=afficherFormulaireCreationUtilisateur");
             exit();
         }
 
@@ -154,30 +191,42 @@ class ControleurUtilisateur extends ControleurGenerique
 
         if ($mdp != $mdp2) {
             MessageFlash::ajouter("danger", "Les mots de passe ne correspondent pas");
-            header("Location: ?controleur=dashboard&action=afficherDashBoard");
+            header("Location:  ?controleur=utilisateur&action=afficherFormulaireCreationUtilisateur");
             exit();
         }
 
         $newutilisateur = ControleurUtilisateur::construireDepuisFormulaire($_GET);
 
-        if (filter_var($newutilisateur->getMail(), FILTER_VALIDATE_EMAIL) === false) {
+        if (filter_var($newutilisateur->getEmail(), FILTER_VALIDATE_EMAIL) === false) {
             MessageFlash::ajouter("danger", "Adresse mail invalide");
         }
         else if ((new UtilisateurRepository)->add($newutilisateur)) {
             MessageFlash::ajouter("success", "Utilisateur créé avec succès");
 
-            Mail::envoyerMail($newutilisateur, "Compte CapyNote",
-                "Bonjour {$newutilisateur->getNomUtilisateur()} {$newutilisateur->getPrenom()},\n\n
-                L'administrateur de CapyNote vient de vous créer un compte.\n
-                Vous pouvez vous connecter avec le login et le mot de passe ci-dessous :\n
-                Login : {$newutilisateur->getLogin()}\n
-                Mot de passe : {$mdp}\n\n
+            Mail::envoyerMail($newutilisateur, "Compte SingerTrain",
+                "Bonjour {$newutilisateur->getLogin()}\n\n
+                Merci D'avoir creer votre compte chez nous.\n
+            
                 ");
 
         } else {
             MessageFlash::ajouter("danger", "Impossible de créer l'utilisateur");
         }
-        header("Location: ?controleur=dashboard&action=afficherDashBoard");
+        header("Location:  ?controleur=utilisateur&action=afficherFormulaireConnexion");
         exit();
+    }
+
+    public static function construireDepuisFormulaire(array $tableauDonneesFormulaire): Utilisateur
+    {
+
+        if ($tableauDonneesFormulaire['mail'] == null) {
+            $tableauDonneesFormulaire['mail'] = "inconnu";
+        }
+
+        return new Utilisateur(
+            $tableauDonneesFormulaire['login'],
+            MotDePasse::hacher($tableauDonneesFormulaire['mdp']),
+            $tableauDonneesFormulaire['mail']
+        );
     }
 }

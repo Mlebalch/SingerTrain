@@ -78,13 +78,13 @@ abstract class AbstractRepository
         $pdoStatement->execute($values);
     }
 
-    public function ajouter(AbstractDataObject $objet): bool
+    public function add(AbstractDataObject $objet): bool
     {
-            $columns = $this->getNomColonne();
-            $placeholders = array_map(fn($col) => ":$col", $columns);
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
-            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-            return $pdoStatement->execute($this->formatSQLArray($objet));
+        $columns = $this->getColumnNames();
+        $placeholders = array_map(fn($col) => ":$col", $columns);
+        $sql = "INSERT INTO " . $this->getTableName() . " (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        return $pdoStatement->execute($this->formatSQLArray($objet));
     }
 
     public function ajouterSiNexistePas(AbstractDataObject $objet): bool
@@ -94,4 +94,5 @@ abstract class AbstractRepository
         }
         return false;
     }
+
 }
