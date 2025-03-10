@@ -13,10 +13,13 @@ use App\Lib\ConnexionUtilisateur;
 <head>
     <meta charset="UTF-8">
     <title><?php echo htmlspecialchars($titre); ?></title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../ressources/style.css">
 </head>
 
 <body>
+
+<script src="../ressources/script.js"></script>
     <header>
 
     <nav>
@@ -42,6 +45,20 @@ use App\Lib\ConnexionUtilisateur;
 
         </ul>
     </nav>
+        <?php
+
+            /** @var string[][] $messagesFlash */
+            if (isset($messagesFlash))
+            {
+                foreach ($messagesFlash as $type => $messagesFlashPourUnType) {
+                    // $type est l'une des valeurs suivantes : "success", "info", "warning", "danger"
+                    // $messagesFlashPourUnType est la liste des messages flash d'un type
+                    foreach ($messagesFlashPourUnType as $messageFlash) {
+                        echo "<script> displayFlashMessage(\"$messageFlash\", \"$type\"); </script>";
+                    }
+                }
+            }
+            ?>
     </header>
     <main>
         <div class="content">
