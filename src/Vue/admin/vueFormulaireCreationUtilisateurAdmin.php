@@ -1,4 +1,4 @@
-<h3>Créer un utilisateur</h3>
+<h3>Créer un Admin</h3>
 <form method="post" action="" class="">
     <label>
         Login :
@@ -19,6 +19,6 @@
 
     <input type="submit" value="Envoyer" />
     <input type='hidden' name='action' value='creerUtilisateurDepuisFormulaire'>
-    <input type='hidden' name='admin' value='false'>
+    <input type='hidden' name='admin' value='true'>
     <input type='hidden' name='controleur' value='utilisateur'>
 </form>

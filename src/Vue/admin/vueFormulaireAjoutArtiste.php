@@ -19,7 +19,7 @@ Nom :
 
     <input type="submit" value="Envoyer" />
     <input type='hidden' name='action' value='enregistrerArtiste'>
-    <input type='hidden' name='controleur' value='utilisateur'>
+    <input type='hidden' name='controleur' value='admin'>
 </form>
 
 

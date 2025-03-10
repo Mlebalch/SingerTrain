@@ -63,13 +63,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
         }
     }
-    public static function afficherVueFormulaireAjoutArtiste(){
-        self::afficherVue("vueGenerale.php", [
-            "titre" => "Ajouter un artiste",
-            "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
-            "messagesFlash" => MessageFlash::lireTousMessages(),
-        ]);
-    }
+
 
     public static function reponse()
     {
@@ -111,35 +105,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
     }
 
-    public static function enregistrerArtiste()
-    {
-        $artisteid = (new DeezerApi())->add($_REQUEST['recherche']);
-        if ($artisteid != 0) {
-            $artiste = $_REQUEST['aritste'];
-            $artisteModifie = '';
-            foreach (str_split($artiste) as $char) {
-                if ($char === '/') {
-                    $artisteModifie .= '-';
-                } else {
-                    $artisteModifie .= $char;
-                }
-            }
-            (new ArtisteRepository())->add(new Artiste($_REQUEST['aritste'], $_REQUEST['prenom'],$_REQUEST['nom'], $artisteid, "https://www.nautiljon.com/people/".$artisteModifie.".html"));
-            self::afficherVue("vueGenerale.php", [
-                "titre" => "Ajouter un artiste",
-                "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
-                "messagesFlash" => MessageFlash::lireTousMessages(),
-            ]);
-        } else {
-            var_dump("erreur");
-            self::afficherVue("vueGenerale.php", [
-                "titre" => "Ajouter un artiste",
-                "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
-                "messagesFlash" => MessageFlash::lireTousMessages(),
-            ]);
-        }
 
-    }
     public static function afficherFormulaireModification()
     {
         self::afficherVue("vueGenerale.php", [
@@ -201,21 +167,21 @@ class ControleurUtilisateur extends ControleurGenerique
     public static function creerUtilisateurDepuisFormulaire(): void
     {
 
-        if (!isset($_GET['login']) || !isset($_GET['mdp']) || !isset($_GET['mdp2']) || !isset($_GET['mail'])) {
+        if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp']) || !isset($_REQUEST['mdp2']) || !isset($_REQUEST['mail'])) {
             MessageFlash::ajouter("danger", "Veuillez remplir tous les champs");
             header("Location: ?controleur=utilisateur&action=afficherFormulaireCreationUtilisateur");
             exit();
         }
 
-        $mdp = $_GET['mdp'];
-        $mdp2 = $_GET['mdp2'];
+        $mdp = $_REQUEST['mdp'];
+        $mdp2 = $_REQUEST['mdp2'];
 
         if ($mdp != $mdp2) {
             MessageFlash::ajouter("danger", "Les mots de passe ne correspondent pas");
             header("Location:  ?controleur=utilisateur&action=afficherFormulaireCreationUtilisateur");
             exit();
         }
-        $newutilisateur = ControleurUtilisateur::construireDepuisFormulaire($_GET);
+        $newutilisateur = ControleurUtilisateur::construireDepuisFormulaire($_REQUEST);
 
         if (filter_var($newutilisateur->getEmail(), FILTER_VALIDATE_EMAIL) === false) {
             MessageFlash::ajouter("danger", "Adresse mail invalide");
@@ -247,7 +213,7 @@ class ControleurUtilisateur extends ControleurGenerique
             $tableauDonneesFormulaire['login'],
             MotDePasse::hacher($tableauDonneesFormulaire['mdp']),
             $tableauDonneesFormulaire['mail'],
-            "user",
+            $tableauDonneesFormulaire['admin'],
         );
     }
 
