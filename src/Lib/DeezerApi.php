@@ -58,7 +58,7 @@ class DeezerApi
     {
         $curl = curl_init();
 
-        $url = "https://api.deezer.com/search?q=artist:\"" . urlencode($recherche) . "\"";
+        $url = "https://api.deezer.com/search?q=" . urlencode($recherche);
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

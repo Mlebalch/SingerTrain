@@ -26,7 +26,9 @@ use App\Lib\ConnexionUtilisateur;
 
             <?php
             if (ConnexionUtilisateur::estConnecte() && ConnexionUtilisateur::getUtilisateurConnecte() != null) {
-                echo "<li><a href='?controleur=utilisateur&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li>";
+               if (ConnexionUtilisateur::estAdmin()) {
+                   echo "<li><a href='?controleur=utilisateur&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li>";
+               }
                 echo "<li><a href='?controleur=utilisateur&action=score'>Score</a></li>";
                 echo "<li><a href='?controleur=utilisateur&action=afficherFormulaireModification'>Modification</a></li> ";
                 echo "<li><a href='?controleur=utilisateur&action=deconnexion'>Déconnexion</a></li>";

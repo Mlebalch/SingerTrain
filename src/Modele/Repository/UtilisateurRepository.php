@@ -21,7 +21,7 @@ class UtilisateurRepository extends AbstractRepository
 
     protected function getColumnNames(): array
     {
-        return ['login',  'mdp', 'email'];
+        return ['login',  'mdp', 'email', 'role'];
     }
 
     protected function formatSQLArray(AbstractDataObject $objet): array
@@ -31,6 +31,7 @@ class UtilisateurRepository extends AbstractRepository
             'login' => $objet->getLogin(),
             'mdp' => $objet->getMdp(),
             'email' => $objet->getEmail(),
+            'role' => $objet->getRole()
         );
     }
 
@@ -40,6 +41,7 @@ class UtilisateurRepository extends AbstractRepository
             $objetFormatTableau['login'],
             $objetFormatTableau['mdp'],
             $objetFormatTableau['email'],
+            $objetFormatTableau['role']
         );
     }
 

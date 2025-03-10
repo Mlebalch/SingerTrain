@@ -8,12 +8,15 @@ class Utilisateur extends AbstractDataObject
     private string $mdp;
     private string $email;
 
+    private string $role;
 
-    public function __construct(string $login, string $mdp, string $email)
+
+    public function __construct(string $login, string $mdp, string $email, string $role)
     {
         $this->login = $login;
         $this->mdp = $mdp;
         $this->email = $email;
+        $this->role = $role;
     }
 
     public function getLogin(): string
@@ -46,9 +49,19 @@ class Utilisateur extends AbstractDataObject
         $this->email = $email;
     }
 
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
+    }
+
     public function __toString(): string
     {
-        return "Utilisateur[login=$this->login, mdp=$this->mdp, email=$this->email]";
+        return "Utilisateur[login=$this->login, mdp=$this->mdp, email=$this->email, role=$this->role]";
     }
 
 }

@@ -62,16 +62,16 @@ abstract class AbstractRepository
         return $pdoStatement->execute($params);
     }
 
-    public function mettreAJour(AbstractDataObject $objet): void
+    public function update(AbstractDataObject $objet): void
     {
-        $tab = $this->getNomColonne($objet);
+        $tab = $this->getColumnNames($objet);
         $str = " ";
         foreach ($tab as $value) {
             $str = $str . $value . " = :" . $value;
             if ($value != end($tab)): $str = $str .  ", ";
             endif;
         }
-        $sql = "UPDATE " . $this->getNomTable() . " SET " . $str . " WHERE " . $tab[0] . " = :" . $tab[0];
+        $sql = "UPDATE " . $this->getTableName() . " SET " . $str . " WHERE " . $tab[0] . " = :" . $tab[0];
         echo $sql;
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = $this->formatSQLArray($objet);

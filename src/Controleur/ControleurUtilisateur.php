@@ -114,7 +114,16 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         $artisteid = (new DeezerApi())->add($_REQUEST['recherche']);
         if ($artisteid != 0) {
-            (new ArtisteRepository())->add(new Artiste($_REQUEST['aritste'], $_REQUEST['prenom'],$_REQUEST['nom'], $artisteid, "https://www.nautiljon.com/people/".$_REQUEST['aritste'].".html"));
+            $artiste = $_REQUEST['aritste'];
+            $artisteModifie = '';
+            foreach (str_split($artiste) as $char) {
+                if ($char === '/') {
+                    $artisteModifie .= '-';
+                } else {
+                    $artisteModifie .= $char;
+                }
+            }
+            (new ArtisteRepository())->add(new Artiste($_REQUEST['aritste'], $_REQUEST['prenom'],$_REQUEST['nom'], $artisteid, "https://www.nautiljon.com/people/".$artisteModifie.".html"));
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Ajouter un artiste",
                 "cheminCorpsVue" => "utilisateur/vueFormulaireAjoutArtiste.php",
@@ -128,6 +137,17 @@ class ControleurUtilisateur extends ControleurGenerique
                 "messagesFlash" => MessageFlash::lireTousMessages(),
             ]);
         }
+
+    }
+    public static function afficherFormulaireModification()
+    {
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Modification",
+            "cheminCorpsVue" => "utilisateur/vueFormulaireModification.php",
+            "messagesFlash" => MessageFlash::lireTousMessages(),
+            "utilisateur" => ConnexionUtilisateur::getUtilisateurConnecte(),
+
+        ]);
 
     }
 
@@ -194,7 +214,6 @@ class ControleurUtilisateur extends ControleurGenerique
             header("Location:  ?controleur=utilisateur&action=afficherFormulaireCreationUtilisateur");
             exit();
         }
-
         $newutilisateur = ControleurUtilisateur::construireDepuisFormulaire($_GET);
 
         if (filter_var($newutilisateur->getEmail(), FILTER_VALIDATE_EMAIL) === false) {
@@ -226,7 +245,41 @@ class ControleurUtilisateur extends ControleurGenerique
         return new Utilisateur(
             $tableauDonneesFormulaire['login'],
             MotDePasse::hacher($tableauDonneesFormulaire['mdp']),
-            $tableauDonneesFormulaire['mail']
+            $tableauDonneesFormulaire['mail'],
+            "user",
         );
+    }
+
+    public static function modifierUtilisateurDepuisFormulaire()
+    {
+        if (!isset($_GET['mdp']) || !isset($_GET['mdp2']) || !isset($_GET['mdpHache'])) {
+            MessageFlash::ajouter("danger", "Veuillez remplir tous les champs");
+            header("Location: ?controleur=utilisateur&action=afficherFormulaireModification");
+            exit();
+        }
+
+        $mdp = $_GET['mdp'];
+        $mdp2 = $_GET['mdp2'];
+        $mdpHache = $_GET['mdpHache'];
+
+        if ($mdp != $mdp2) {
+            MessageFlash::ajouter("danger", "Les mots de passe ne correspondent pas");
+            header("Location:  ?controleur=utilisateur&action=afficherFormulaireModification");
+            exit();
+        }
+
+        $utilisateur = ConnexionUtilisateur::getUtilisateurConnecte();
+        if (MotDePasse::verifier($mdpHache, $utilisateur->getMdp())) {
+            $utilisateur->setMdp(MotDePasse::hacher($mdp));
+            if ((new UtilisateurRepository())->update($utilisateur)) {
+                MessageFlash::ajouter("success", "Mot de passe modifié avec succès");
+            } else {
+                MessageFlash::ajouter("danger", "Impossible de modifier le mot de passe");
+            }
+        } else {
+            MessageFlash::ajouter("danger", "Mot de passe incorrect");
+        }
+        header("Location:  ?controleur=utilisateur&action=afficherFormulaireModification");
+        exit();
     }
 }
