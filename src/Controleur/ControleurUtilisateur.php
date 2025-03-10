@@ -26,6 +26,8 @@ class ControleurUtilisateur extends ControleurGenerique
     }
     public static function launch()
     {
+        $_SESSION['score'] = 0;
+        $_SESSION['tentative'] = 0;
        $lienDeezer =  (new ArtisteRepository())->getRand();
        $resulte = [];
        foreach ($lienDeezer as $row) {
