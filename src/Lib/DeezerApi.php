@@ -2,6 +2,7 @@
 
 namespace App\Lib;
 
+use App\Modele\HTTP\Session;
 class DeezerApi
 {
     /**
@@ -10,8 +11,10 @@ class DeezerApi
     public function get(array $lienDeezer)
     {
         // Clear the session data
-        $_SESSION['songs'] = [];
-        $_SESSION['artistes'] = [];
+        Session::getInstance()->ecrire("songs", []);
+        Session::getInstance()->ecrire("artistes", []);
+        Session::getInstance()->ecrire("titre", []);
+        Session::getInstance()->ecrire("img", []);
         foreach ($lienDeezer as $lien) {
             $curl = curl_init();
             $artistId = $lien;
@@ -30,10 +33,14 @@ class DeezerApi
             } else {
                 $data = json_decode($result, true);
                 if (isset($data['data']) && count($data['data']) > 0) {
+                    $randomTrack = $data['data'][array_rand($data['data'])];
+                    while(count($randomTrack['contributors']) != 1){
                         $randomTrack = $data['data'][array_rand($data['data'])];
-                    
+                    }
+                         
                     // Enregistrer la chanson dans la session   
                     $_SESSION['songs'][] = $randomTrack['preview'];
+                    $_SESSION['titre'][] = $randomTrack['title'];
                 } else {
                     echo "No tracks data available.";
                 }
@@ -51,6 +58,7 @@ class DeezerApi
 
             $data = json_decode($result, true);
             $_SESSION['artistes'][] = $data['name'];
+            $_SESSION['img'][] = $data['picture_medium'];
         }
 }
 

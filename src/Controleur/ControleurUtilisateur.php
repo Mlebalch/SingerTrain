@@ -71,17 +71,20 @@ class ControleurUtilisateur extends ControleurGenerique
         $reponse = $_REQUEST['artist'];
         $artiste = $_REQUEST['correct_artist'];
         $index = $_REQUEST['index'];
+        $titre = $_SESSION['titre'][$index];
+        $img = $_SESSION['img'][$index];
         var_dump($reponse);
         var_dump($artiste);
         $_SESSION['tentative'] = $_SESSION['tentative'] + 1;
         $singer = (new ArtisteRepository())->getByPrimaryKeys([$artiste]);
         if(strtolower($reponse) === strtolower($artiste))
         {
-
             var_dump("oui");
             $_SESSION['score'] = $_SESSION['score'] + 1;
 
             // Remove the song and artist from the session
+            array_splice($_SESSION['img'], $index, 1);
+            array_splice($_SESSION['titre'], $index, 1);
             array_splice($_SESSION['songs'], $index, 1);
             array_splice($_SESSION['artistes'], $index, 1);
 
@@ -90,6 +93,8 @@ class ControleurUtilisateur extends ControleurGenerique
                 "cheminCorpsVue" => "utilisateur/vueReponse.php",
                 "artiste" => $singer,
                 "reponse" => true,
+                "title" => $titre,
+                "image" => $img,
             ]);
         }
         else
@@ -100,6 +105,8 @@ class ControleurUtilisateur extends ControleurGenerique
                 "cheminCorpsVue" => "utilisateur/vueReponse.php",
                 "artiste" => $singer,
                 "reponse" => false,
+                "title" => $titre,
+                "image" => $img,
             ]);
         }
 
