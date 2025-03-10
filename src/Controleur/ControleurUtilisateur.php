@@ -7,13 +7,14 @@ use App\Lib\Mail;
 use App\Lib\MotDePasse;
 use App\Lib\MessageFlash;
 use App\Lib\ConnexionUtilisateur;
+use App\Modele\HTTP\Session;
 use App\Modele\Repository\ArtisteRepository;
 use App\Modele\Repository\UtilisateurRepository;
 use App\Modele\DataObject\Utilisateur;
 use App\Modele\DataObject\Artiste;
 use Random\Randomizer;
 
-
+Session::getInstance();
 class ControleurUtilisateur extends ControleurGenerique
 {
     public static function afficherAccueil(): void
@@ -79,7 +80,7 @@ class ControleurUtilisateur extends ControleurGenerique
         var_dump($reponse);
         var_dump($artiste);
         $_SESSION['tentative'] = $_SESSION['tentative'] + 1;
-        $singer  =  (new ArtisteRepository())->getArtisteByNomDeScene($artiste);
+        $singer = (new ArtisteRepository())->getByPrimaryKeys([$artiste]);
         if(strtolower($reponse) === strtolower($artiste))
         {
 
