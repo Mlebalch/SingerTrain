@@ -27,6 +27,8 @@ header {
     color: var(--white-color);
     padding: 20px;
     font-size: 24px;
+    position: relative; /* Ensure the header can expand */
+    transition: height 0.3s; /* Smooth transition for height change */
 }
 
 nav ul {
@@ -37,6 +39,37 @@ nav ul {
 nav ul li {
     display: inline;
     margin: 0 15px;
+    position: relative;
+}
+
+nav ul li ul {
+    display: none; /* Hide the submenu by default */
+    position: absolute; /* Position it absolutely */
+    top: 100%; /* Position it just below the parent */
+    left: 0; /* Align it to the left of the parent */
+    padding: 10px; /* Add some padding */
+    border-radius: 5px; /* Add border radius */
+    background-color: var(--primary-color); /* Match the header background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a shadow for better visibility */
+}
+nav ul li:hover ul {
+    display: block; /* Show the submenu on hover */
+}
+
+nav ul li:hover > ul {
+    top: 100%; /* Ensure the submenu is positioned correctly */
+}
+
+nav ul li:hover {
+    height: auto; /* Allow the header to expand */
+}
+
+header:hover {
+    height: auto; /* Allow the header to expand */
+}
+
+nav ul li:hover ul {
+    display: block; /* Show the submenu on hover */
 }
 
 nav a {

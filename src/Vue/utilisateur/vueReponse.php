@@ -1,6 +1,6 @@
 <?php
 /**
- * @var array $artiste
+ * @var \App\Modele\DataObject\Artiste $artiste
  * @var  bool $reponse
  */
 

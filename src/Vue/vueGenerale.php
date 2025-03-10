@@ -30,12 +30,20 @@ use App\Lib\ConnexionUtilisateur;
             <?php
             if (ConnexionUtilisateur::estConnecte() && ConnexionUtilisateur::getUtilisateurConnecte() != null) {
                if (ConnexionUtilisateur::estAdmin()) {
-                   echo "<li><a href='?controleur=utilisateur&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li>";
+
+                   echo "<li>";
+                   echo "<a href=''> <img src='../ressources/icons/setting.svg' alt='' class='icon'> Setting</a>";
+                   echo "<ul><li><a href='?controleur=admin&action=afficherVueFormulaireUtilisateurAdmin'>Crées un admin</a></li> ";
+                   echo "<li><a href='?controleur=admin&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li> </ul>";
+                     echo "</li>";
                }
                 echo "<li><a href='?controleur=utilisateur&action=score'>Score</a></li>";
-                echo "<li><a href='?controleur=utilisateur&action=afficherFormulaireModification'>Modification</a></li> ";
-                echo "<li><a href='?controleur=utilisateur&action=deconnexion'>Déconnexion</a></li>";
+                echo "<li>";
+                echo "<a href=''> <img src='../ressources/icons/user.svg' alt='' class='icon'> ". ConnexionUtilisateur::getUtilisateurConnecte()->getLogin() ."</a>";
+                echo "<ul><li><a href='?controleur=utilisateur&action=afficherFormulaireModification'>Modification</a></li> ";
+                echo "<li><a href='?controleur=utilisateur&action=deconnexion'>Déconnexion</a></li></ul>";
 
+                echo "</li>";
             }
             else{
                 echo "<li> <a href='?controleur=utilisateur&action=afficherFormulaireConnexion'> <img src='../ressources/icons/user.svg' alt='' class='icon'> Connexion</a></li>";
