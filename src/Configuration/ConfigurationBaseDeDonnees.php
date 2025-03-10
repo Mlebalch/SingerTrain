@@ -9,19 +9,19 @@ class ConfigurationBaseDeDonnees
         //
         // ou webinfo.iutmontp.univ-montp2.fr
         // pour accéder à webinfo depuis l'extérieur
-        'nomHote' => ' ',
+        'nomHote' => 'webinfo.iutmontp.univ-montp2.fr',
         // A l'IUT, vous avez une base de données nommee comme votre login
         // Sur votre machine, vous devrez creer une base de données
-        'nomBaseDeDonnees' => '',
+        'nomBaseDeDonnees' => 'lebalchm',
         // À l'IUT, le port de MySQL est particulier : 3316
         // Ailleurs, on utilise le port par défaut : 3306
-        'port' => '',
+        'port' => '3316',
         // A l'IUT, c'est votre login
         // Sur votre machine, vous avez surement un compte 'root'
-        'login' => '',
+        'login' => 'lebalchm',
         // A l'IUT, c'est le même mdp que PhpMyAdmin
         // Sur votre machine personelle, vous avez creez ce mdp a l'installation
-        'motDePasse' => ''
+        'motDePasse' => '6XR3k@lDMzhdnOe3'
     );
 
     static public function getLogin(): string
