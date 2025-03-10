@@ -26,9 +26,6 @@ class ControleurUtilisateur extends ControleurGenerique
     }
     public static function launch()
     {
-
-        $_SESSION['score'] = 0;
-        $_SESSION['tentative'] = 0;
        $lienDeezer =  (new ArtisteRepository())->getRand();
        $resulte = [];
        foreach ($lienDeezer as $row) {
@@ -79,10 +76,9 @@ class ControleurUtilisateur extends ControleurGenerique
         var_dump($reponse);
         var_dump($artiste);
         $_SESSION['tentative'] = $_SESSION['tentative'] + 1;
-        $singer  =  (new ArtisteRepository())->getArtisteByNomDeScene($artiste);
+        $singer  =  $artiste->getNomDeScene();
         if(strtolower($reponse) === strtolower($artiste))
         {
-
             var_dump("oui");
             $_SESSION['score'] = $_SESSION['score'] + 1;
 

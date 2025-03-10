@@ -59,7 +59,10 @@ if (isset($result['songs']) && is_array($result['songs'])) {
         if(strtolower($song['name'])==strtolower($musicname)){
             echo "<br><br>";
             echo "Anime : " . ($song['anime'][0]['name'] ?? 'Inconnu') . "<br>";
+        }
+        else{
             echo "<br><br>";
+            echo "Pas le bon : " . ($song['anime'][0]['name'] ?? 'Inconnu') . "<br>";
         }
     }
     }

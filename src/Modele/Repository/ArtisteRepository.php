@@ -38,9 +38,9 @@ class ArtisteRepository extends AbstractRepository
     {
         return new Artiste(
             $objetFormatTableau['nom_de_scene'],
-            $objetFormatTableau['prenom'] ?? null,
-            $objetFormatTableau['nom'] ?? null,
-            $objetFormatTableau['lien_deezer'] ?? null,
+            $objetFormatTableau['prenom'],
+            $objetFormatTableau['nom'],
+            $objetFormatTableau['lien_deezer'],
             $objetFormatTableau['lien_nautijon'],
         );
     }

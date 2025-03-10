@@ -14,12 +14,11 @@ if (isset($_COOKIE["volume"])) {
     </script>';
 }
 
-
 $songs = isset($_SESSION['songs']) ? $_SESSION['songs'] : [];
 $artistes = isset($_SESSION['artistes']) ? $_SESSION['artistes'] : []; // Assurez-vous de définir cette variable ou de la récupérer d'une autre manière
 
 echo "<h1>Guess the artist</h1>";
-echo "<p>Score: {$_SESSION['score']}</p>";
+echo "<p>Score: {".$_SESSION['score']."}</p>";
 
 if (is_array($songs) && !empty($songs)) {
     $index = rand(0, count($songs) - 1);
