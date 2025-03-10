@@ -3,17 +3,6 @@
 use App\Lib\MessageFlash;
 use App\Modele\HTTP\Session;
 
-if (isset($_COOKIE["volume"])) {
-    $volume = $_COOKIE["volume"]; // Récupération du volume
-    echo '<script>
-        const audiocookie = document.getElementById("audio");
-        if (audiocookie) {
-            audiocookie.volume = ' . json_encode($volume) . ';
-        }
-            console.log('.json_encode($volume).')
-    </script>';
-}
-
 $songs = isset($_SESSION['songs']) ? $_SESSION['songs'] : [];
 $artistes = isset($_SESSION['artistes']) ? $_SESSION['artistes'] : []; // Assurez-vous de définir cette variable ou de la récupérer d'une autre manière
 
@@ -38,16 +27,21 @@ if (is_array($songs) && !empty($songs)) {
      <input type="hidden" name="controleur" value="utilisateur">
  </form>
 
- <input type="range" id="volumeSlider" min="0" max="0.8" step="0.05" value="0.4">
+<input type="range" id="volumeSlider" min="0" max="0.3" step="0.001" value="'.$_COOKIE["volume"].'">
 
- <script>
-     const audio = document.getElementById("audio");
-     const volumeSlider = document.getElementById("volumeSlider");
-
+<script>
+    const audio = document.getElementById("audio");
+    const volumeSlider = document.getElementById("volumeSlider");
+    
      volumeSlider.addEventListener("input", function () {
          audio.volume = this.value;
+         document.cookie = "volume=" + this.value;
      });
-     document.cookie = "volume="+audio.volume+"; path=/;"
+
+     document.addEventListener("DOMContentLoaded", function () {
+         audio.volume = volumeSlider.value;
+     });
+
  </script>';     
 } else {
     echo "No songs available.";
