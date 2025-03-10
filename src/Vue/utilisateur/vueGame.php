@@ -28,12 +28,6 @@ if (is_array($songs) && !empty($songs)) {
     echo "<source src='{$song}' type='audio/mpeg'>";
     echo "</audio>";
 
-   /* foreach ($songs as $song) {
-        echo $artiste[array_search($song, $songs)] ?? '';
-        echo "<audio controls>";
-        echo "<source src='{$song}' type='audio/mpeg'>";
-        echo "</audio>";
-     }*/
      echo '<form method="post" action="">
      <label for="artist">Guess the artist:</label>
      <input type="text" id="artist" name="artist">
