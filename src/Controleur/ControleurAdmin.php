@@ -83,7 +83,7 @@ class ControleurAdmin extends ControleurGenerique
     public static function afficherVueFormulaireUtilisateurAdmin(){
         self::afficherVue("vueGenerale.php", [
             "titre" => "Utilisateur",
-            "cheminCorpsVue" => "utilisateur/vueFormulaireCreationUtilisateurAdmin.php",
+            "cheminCorpsVue" => "admin/vueFormulaireCreationUtilisateurAdmin.php",
             "messagesFlash" => MessageFlash::lireTousMessages(),
         ]);
     }

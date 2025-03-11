@@ -9,10 +9,12 @@ use App\Lib\MessageFlash;
 use App\Lib\ConnexionUtilisateur;
 use App\Modele\HTTP\Session;
 use App\Modele\Repository\ArtisteRepository;
+use App\Modele\Repository\StatRepository;
 use App\Modele\Repository\UtilisateurRepository;
 use App\Modele\DataObject\Utilisateur;
 use App\Modele\DataObject\Artiste;
 use Random\Randomizer;
+use App\Modele\DataObject\Stat;
 
 Session::getInstance();
 class ControleurUtilisateur extends ControleurGenerique
@@ -71,22 +73,38 @@ class ControleurUtilisateur extends ControleurGenerique
         $reponse = $_REQUEST['artist'];
         $artiste = $_REQUEST['correct_artist'];
         $index = $_REQUEST['index'];
-        $titre = $_SESSION['titre'][$index];
-        $img = $_SESSION['img'][$index];
+        $titre = $_SESSION['dico'][$index]['titre'] ?? null;
+        $img = $_SESSION['dico'][$index]['img'] ?? null;
         var_dump($reponse);
         var_dump($artiste);
-        $_SESSION['tentative'] = $_SESSION['tentative'] + 1;
+        if ($titre === null || $img === null) {
+            echo "Error: Missing title or image.";
+            return;
+        }
+
+        $_SESSION['dico'][$index]['tentative'] = ($_SESSION['dico'][$index]['tentative'] ?? 0) + 1;
+        $_SESSION['tentative'] = ($_SESSION['tentative'] ?? 0) + 1;
         $singer = (new ArtisteRepository())->getByPrimaryKeys([$artiste]);
+
+        $statRepository = new StatRepository();
+        $stat = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1]);
+
         if(strtolower($reponse) === strtolower($artiste))
         {
             var_dump("oui");
-            $_SESSION['score'] = $_SESSION['score'] + 1;
+            $_SESSION['score'] = ($_SESSION['score'] ?? 0) + 1;
 
-            // Remove the song and artist from the session
-            array_splice($_SESSION['img'], $index, 1);
-            array_splice($_SESSION['titre'], $index, 1);
-            array_splice($_SESSION['songs'], $index, 1);
-            array_splice($_SESSION['artistes'], $index, 1);
+            if ($stat) {
+                $stat->incrementTentative();
+                $stat->incrementCorrect();
+                $statRepository->update($stat);
+            } else {
+                $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 1));
+            }
+            // Remove the correct answer from the session and shift the remaining elements
+            array_splice($_SESSION['dico'], $index, 1);
+
+
 
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Reponse",
@@ -100,6 +118,12 @@ class ControleurUtilisateur extends ControleurGenerique
         else
         {
             var_dump("non");
+            if ($stat) {
+                $stat->incrementTentative();
+                $statRepository->update($stat);
+            } else {
+                $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 0));
+            }
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Reponse",
                 "cheminCorpsVue" => "utilisateur/vueReponse.php",
@@ -255,5 +279,17 @@ class ControleurUtilisateur extends ControleurGenerique
         }
         header("Location:  ?controleur=utilisateur&action=afficherFormulaireModification");
         exit();
+    }
+
+    public static function afficherVueStat()
+    {
+        $stat = (new StatRepository())->get();
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Stat",
+            "cheminCorpsVue" => "utilisateur/vueStat.php",
+            "messagesFlash" => MessageFlash::lireTousMessages(),
+            "stat" => $stat,
+        ]);
+
     }
 }

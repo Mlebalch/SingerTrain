@@ -10,11 +10,11 @@ $artistes = isset($_SESSION['artistes']) ? $_SESSION['artistes'] : []; // Assure
 
 echo "<h1>Guess the artist</h1>";
 echo "<p>Score: {".$_SESSION['score']."}</p>";
-
-if (is_array($songs) && !empty($songs)) {
-    $index = rand(0, count($songs) - 1);
-    $song = $songs[$index];
-    $artiste =  $artistes[array_search($song, $songs)] ?? '';
+$index = rand(0, count($_SESSION['dico']) - 1);
+var_dump($index);
+var_dump($_SESSION['dico'][$index]['song']);
+$song = $_SESSION['dico'][$index]['song'] ?? null;
+$artiste = $_SESSION['dico'][$index]['artiste'] ?? null;
     echo "<audio id='audio' autoplay loop>";
     echo "<source src='{$song}' type='audio/mpeg'>";
     echo "</audio>";
@@ -44,8 +44,6 @@ if (is_array($songs) && !empty($songs)) {
          audio.volume = volumeSlider.value;
      });
 
- </script>';     
-} else {
-    echo "No songs available.";
-}
+ </script>';
+
 

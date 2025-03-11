@@ -30,15 +30,18 @@ abstract class AbstractRepository
         }
         return $utilisateur;
     }
+
     public function getByPrimaryKeys(array $primaryKeys): ?AbstractDataObject
     {
         $conditions = [];
         $params = [];
         foreach ($this->getPrimaryKeyNames() as $index => $key) {
+            if (!isset($primaryKeys[$index])) {
+                return null;
+            }
             $conditions[] = "$key = :$key";
             $params[$key] = $primaryKeys[$index];
         }
-
 
         $sql = "SELECT * from " . $this->getTableName() . " WHERE " . implode(" AND ", $conditions);
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -47,7 +50,6 @@ abstract class AbstractRepository
         if (!$objetFormatTableau) return null;
         return $this->constructFromSQLArray($objetFormatTableau);
     }
-
 
     public function supprimerParClePrimaires(array $primaryKeys): bool
     {
@@ -94,5 +96,4 @@ abstract class AbstractRepository
         }
         return false;
     }
-
 }
