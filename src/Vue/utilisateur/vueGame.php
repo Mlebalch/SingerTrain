@@ -3,6 +3,8 @@
 use App\Lib\MessageFlash;
 use App\Modele\HTTP\Session;
 
+$volume = isset($_COOKIE["volume"]) ? $_COOKIE["volume"] : 0.15;
+
 $songs = isset($_SESSION['songs']) ? $_SESSION['songs'] : [];
 $artistes = isset($_SESSION['artistes']) ? $_SESSION['artistes'] : []; // Assurez-vous de définir cette variable ou de la récupérer d'une autre manière
 
@@ -27,7 +29,7 @@ if (is_array($songs) && !empty($songs)) {
      <input type="hidden" name="controleur" value="utilisateur">
  </form>
 
-<input type="range" id="volumeSlider" min="0" max="0.3" step="0.001" value="'.$_COOKIE["volume"].'">
+<input type="range" id="volumeSlider" min="0" max="0.3" step="0.001" value="'.$volume.'">
 
 <script>
     const audio = document.getElementById("audio");

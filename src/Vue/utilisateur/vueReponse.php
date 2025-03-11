@@ -8,22 +8,19 @@
 
 
 if ($reponse) {
-    echo "<h1>Correct!$title</h1><img src=".$image.">";
-
+    echo "<h1>Correct!</h1>";
 } else {
-    echo "<h1>Incorrect!$title</h1><img src=".$image.">";
-
-
+    echo "<h1>Incorrect!</h1>";
 }
 
+echo "<img src=".$image.">";
 echo "<h2>Artist: {$artiste->getNomDeScene()}</h2>";
 echo "<h2>Real name: {$artiste->getNom()} {$artiste->getPrenom()}</h2>";
+echo "<h2>Titre: {$title}</h2>";
 echo "<a href='{$artiste->getLienNautijon()}'>Nautijon</a>";
 
 echo "<h2>Score: {$_SESSION['score']}</h2>";
 echo "<h2>Tentative: {$_SESSION['tentative']}</h2>";
-
-echo "<a href='?controleur=utilisateur&action=next'>Next</a>";
 function fetchAnimeSongs($music, $artist) {
     $baseUrl = "https://animesongs.org/api/songs/search";
     $query = http_build_query([
@@ -57,25 +54,18 @@ function fetchAnimeSongs($music, $artist) {
     return json_decode($response, true);
 }
 
-$musicname = isset($_GET['musicname']) ? trim($_GET['musicname']) : '';
-$artist = isset($_GET['artist']) ? trim($_GET['artist']) : '';
-
-if (empty($musicname) || empty($artist)) {
-    echo json_encode(["error" => "Missing required parameters: musicname and artist"]);
-    exit;
-}
-
-$result = fetchAnimeSongs($musicname, $artist);
+$result = fetchAnimeSongs($title, $artiste->getNomDeScene());
 
 if (isset($result['songs']) && is_array($result['songs'])) {
-    foreach($result['songs'] as $song){
-        if(strtolower($song['name'])==strtolower($musicname)){
-            echo "<br><br>";
-            echo "Anime : " . ($song['anime'][0]['name'] ?? 'Inconnu') . "<br>";
+            echo "<h2>Anime : " . ($result['songs'][0]['anime'][0]['name'] ?? 'Inconnu') . "</h2><br>";
         }
-    }
-    }
 else {
-    echo "Aucune chanson trouvée.";
+    echo "<h2>Aucune chanson trouvée</h2>";
 }
 
+echo "<br>
+<br><a href='?controleur=utilisateur&action=next'>Next</a>
+<br>
+<br>
+<br>
+<br>";
