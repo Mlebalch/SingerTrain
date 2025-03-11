@@ -74,6 +74,7 @@
 
 * [![PHP][Php.js]][Php-url]
 * ![CSS][CSS-ig]
+* ![Javascript][Javascript-ig]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -160,3 +161,4 @@ Don't forget to give the project a star! Thanks again!
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
 [CSS-ig]: https://img.shields.io/badge/CSS-20232A?style=for-the-badge&logo=css&logoColor=61DAFB
+[Javascript-ig]: https://img.shields.io/badge/Javascript-20232A?style=for-the-badge&logo=javascript&logoColor=FFDE21
