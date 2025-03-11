@@ -36,10 +36,11 @@ class GameRepository extends AbstractRepository
 
     protected function constructFromSQLArray(array $objetFormatTableau): AbstractDataObject
     {
-        return new Artiste(
+
+        return new Game(
             $objetFormatTableau['id'],
             $objetFormatTableau['description'],
-            $objetFormatTableau['difficulter'],
+            $objetFormatTableau['difficulter']
         );
     }
 

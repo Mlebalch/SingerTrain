@@ -4,8 +4,9 @@ namespace App\Modele\Repository;
 
 use App\Modele\DataObject\AbstractDataObject;
 use App\Modele\DataObject\Stat;
+use App\Lib\ConnexionBaseDeDonnees;
 
-class StatRepository extends    AbstractRepository
+class StatRepository extends AbstractRepository
 {
     protected function getTableName(): string
     {
@@ -34,7 +35,7 @@ class StatRepository extends    AbstractRepository
         );
     }
 
-    protected function constructFromSQLArray(array $objetFormatTableau): AbstractDataObject
+    protected  function constructFromSQLArray(array $objetFormatTableau): AbstractDataObject
     {
 
         return new Stat(
@@ -45,6 +46,21 @@ class StatRepository extends    AbstractRepository
             $objetFormatTableau['nbrArtisteTrouver']
         );
     }
+
+ public function getbylogin(string $login): array
+{
+    $stat = [];
+    $sql = "SELECT * FROM stat WHERE login = :login";
+    $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+    $pdoStatement->execute(['login' => $login]);
+    foreach ($pdoStatement as $statFormatTableau)
+    {
+        $stat[] = $this->constructFromSQLArray($statFormatTableau);
+    }
+    return $stat;
+}
+
+
 
 
 

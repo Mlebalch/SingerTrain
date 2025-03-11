@@ -87,55 +87,58 @@ class ControleurUtilisateur extends ControleurGenerique
         $singer = (new ArtisteRepository())->getByPrimaryKeys([$artiste]);
 
         $statRepository = new StatRepository();
-        $stat = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1]);
+        if (ConnexionUtilisateur::estConnecte()) {
+            $stat = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1]);
+        }
 
-        if(strtolower($reponse) === strtolower($artiste))
-        {
+
+        if (strtolower($reponse) === strtolower($artiste)) {
             var_dump("oui");
             $_SESSION['score'] = ($_SESSION['score'] ?? 0) + 1;
+            if (ConnexionUtilisateur::estConnecte()) {
+                if ($stat) {
+                    $stat->incrementTentative();
+                    $stat->incrementCorrect();
+                    $statRepository->update($stat);
+                } else {
+                    $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 1));
 
-            if ($stat) {
-                $stat->incrementTentative();
-                $stat->incrementCorrect();
-                $statRepository->update($stat);
-            } else {
-                $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 1));
+                }
             }
-            // Remove the correct answer from the session and shift the remaining elements
-            array_splice($_SESSION['dico'], $index, 1);
+                // Remove the correct answer from the session and shift the remaining elements
+                array_splice($_SESSION['dico'], $index, 1);
 
 
-
-            self::afficherVue("vueGenerale.php", [
-                "titre" => "Reponse",
-                "cheminCorpsVue" => "utilisateur/vueReponse.php",
-                "artiste" => $singer,
-                "reponse" => true,
-                "title" => $titre,
-                "image" => $img,
-            ]);
+                self::afficherVue("vueGenerale.php", [
+                    "titre" => "Reponse",
+                    "cheminCorpsVue" => "utilisateur/vueReponse.php",
+                    "artiste" => $singer,
+                    "reponse" => true,
+                    "title" => $titre,
+                    "image" => $img,
+                ]);
         }
-        else
-        {
-            var_dump("non");
-            if ($stat) {
-                $stat->incrementTentative();
-                $statRepository->update($stat);
-            } else {
-                $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 0));
+        else {
+                var_dump("non");
+                if (ConnexionUtilisateur::estConnecte()) {
+                    if ($stat) {
+                        $stat->incrementTentative();
+                        $statRepository->update($stat);
+                    } else {
+                        $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 0));
+                    }
+                }
+                self::afficherVue("vueGenerale.php", [
+                    "titre" => "Reponse",
+                    "cheminCorpsVue" => "utilisateur/vueReponse.php",
+                    "artiste" => $singer,
+                    "reponse" => false,
+                    "title" => $titre,
+                    "image" => $img,
+                ]);
             }
-            self::afficherVue("vueGenerale.php", [
-                "titre" => "Reponse",
-                "cheminCorpsVue" => "utilisateur/vueReponse.php",
-                "artiste" => $singer,
-                "reponse" => false,
-                "title" => $titre,
-                "image" => $img,
-            ]);
-        }
 
     }
-
 
     public static function afficherFormulaireModification()
     {
@@ -283,7 +286,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function afficherVueStat()
     {
-        $stat = (new StatRepository())->get();
+        $stat = (new StatRepository())->getbylogin(ConnexionUtilisateur::getUtilisateurConnecte()->getLogin());
         self::afficherVue("vueGenerale.php", [
             "titre" => "Stat",
             "cheminCorpsVue" => "utilisateur/vueStat.php",
