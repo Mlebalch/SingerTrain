@@ -87,7 +87,7 @@ class ControleurUtilisateur extends ControleurGenerique
         $singer = (new ArtisteRepository())->getByPrimaryKeys([$artiste]);
 
         $statRepository = new StatRepository();
-        $stat = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin()]);
+        $stat = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1]);
 
         if(strtolower($reponse) === strtolower($artiste))
         {
