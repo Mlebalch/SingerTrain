@@ -19,7 +19,7 @@ class StatRepository extends    AbstractRepository
 
     protected function getColumnNames(): array
     {
-        return ['nom_de_scene', 'login', 'id', 'nbrTentative', 'nbrArtisteTrouver', 'nbrPartie'];
+        return ['nom_de_scene', 'login', 'id', 'nbrTentative', 'nbrArtisteTrouver'];
     }
 
     protected function formatSQLArray(AbstractDataObject $objet): array
@@ -31,20 +31,23 @@ class StatRepository extends    AbstractRepository
             'id' => $objet->getId(),
             'nbrTentative' => $objet->getNbrTentative(),
             'nbrArtisteTrouver' => $objet->getNbrArtisteTrouver(),
-            'nbrPartie' => $objet->getNbrPartie(),
         );
     }
 
     protected function constructFromSQLArray(array $objetFormatTableau): AbstractDataObject
     {
-        return new Artiste(
+
+        return new Stat(
             $objetFormatTableau['nom_de_scene'],
             $objetFormatTableau['login'],
             $objetFormatTableau['id'],
             $objetFormatTableau['nbrTentative'],
-            $objetFormatTableau['nbrArtisteTrouver'],
-            $objetFormatTableau['nbrPartie'],
+            $objetFormatTableau['nbrArtisteTrouver']
         );
     }
+
+
+
+
 
 }

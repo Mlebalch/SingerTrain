@@ -19,6 +19,6 @@
 
     <input type="submit" value="Envoyer" />
     <input type='hidden' name='action' value='creerUtilisateurDepuisFormulaire'>
-    <input type='hidden' name='admin' value='false'>
+    <input type='hidden' name='admin' value='user'>
     <input type='hidden' name='controleur' value='utilisateur'>
 </form>

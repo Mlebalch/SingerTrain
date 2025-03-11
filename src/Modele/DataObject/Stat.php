@@ -9,16 +9,14 @@ class Stat extends AbstractDataObject
     private int  $id;
     private int $nbrTentative;
     private int $nbrArtisteTrouver;
-    private int $nbrPartie;
 
-    public function __construct(string $nom_de_scene, string $login, int $id, int $nbrTentative, int $nbrArtisteTrouver, int $nbrPartie)
+    public function __construct(string $nom_de_scene, string $login, int $id, int $nbrTentative, int $nbrArtisteTrouver)
     {
         $this->nom_de_scene = $nom_de_scene;
         $this->login = $login;
         $this->id = $id;
         $this->nbrTentative = $nbrTentative;
         $this->nbrArtisteTrouver = $nbrArtisteTrouver;
-        $this->nbrPartie = $nbrPartie;
     }
 
     public function getNomDeScene(): string
@@ -71,18 +69,19 @@ class Stat extends AbstractDataObject
         $this->nbrArtisteTrouver = $nbrArtisteTrouver;
     }
 
-    public function getNbrPartie(): int
-    {
-        return $this->nbrPartie;
-    }
-
-    public function setNbrPartie(int $nbrPartie): void
-    {
-        $this->nbrPartie = $nbrPartie;
-    }
 
     public function __toString(): string
     {
-        return "Stat[nom_de_scene=$this->nom_de_scene, login=$this->login, id=$this->id, nbrTentative=$this->nbrTentative, nbrArtisteTrouver=$this->nbrArtisteTrouver, nbrPartie=$this->nbrPartie]";
+        return "Stat[nom_de_scene=$this->nom_de_scene, login=$this->login, id=$this->id, nbrTentative=$this->nbrTentative, nbrArtisteTrouver=$this->nbrArtisteTrouver]";
+    }
+
+    public function incrementTentative()
+    {
+        $this->nbrTentative++;
+    }
+
+    public function incrementCorrect()
+    {
+        $this->nbrArtisteTrouver++;
     }
 }

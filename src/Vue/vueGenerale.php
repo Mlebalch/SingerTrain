@@ -37,7 +37,7 @@ use App\Lib\ConnexionUtilisateur;
                    echo "<li><a href='?controleur=admin&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li> </ul>";
                      echo "</li>";
                }
-                echo "<li><a href='?controleur=utilisateur&action=score'>Score</a></li>";
+                echo "<li><a href='?controleur=utilisateur&action=afficherVueStat'>Stat</a></li>";
                 echo "<li>";
                 echo "<a href=''> <img src='../ressources/icons/user.svg' alt='' class='icon'> ". ConnexionUtilisateur::getUtilisateurConnecte()->getLogin() ."</a>";
                 echo "<ul><li><a href='?controleur=utilisateur&action=afficherFormulaireModification'>Modification</a></li> ";
