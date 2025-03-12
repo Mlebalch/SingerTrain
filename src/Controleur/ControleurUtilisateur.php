@@ -16,6 +16,7 @@ use App\Modele\DataObject\Artiste;
 use Random\Randomizer;
 use App\Modele\DataObject\Stat;
 
+
 Session::getInstance();
 class ControleurUtilisateur extends ControleurGenerique
 {
@@ -49,7 +50,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function next(){
 
-        if ($_SESSION['songs'] == null){
+        if ($_SESSION['dico'] == null){
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Game",
                 "cheminCorpsVue" => "utilisateur/vueScoreFinal.php",
@@ -88,7 +89,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
         $statRepository = new StatRepository();
         if (ConnexionUtilisateur::estConnecte()) {
-            $stat = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1]);
+            $stat [] = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1]);
         }
 
 
@@ -96,10 +97,10 @@ class ControleurUtilisateur extends ControleurGenerique
             var_dump("oui");
             $_SESSION['score'] = ($_SESSION['score'] ?? 0) + 1;
             if (ConnexionUtilisateur::estConnecte()) {
-                if ($stat) {
-                    $stat->incrementTentative();
-                    $stat->incrementCorrect();
-                    $statRepository->update($stat);
+                if (isset($stat[0])) {
+                    $stat[0]->incrementTentative();
+                    $stat[0]->incrementCorrect();
+                    $statRepository->addAll($stat);
                 } else {
                     $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 1));
 
@@ -121,9 +122,9 @@ class ControleurUtilisateur extends ControleurGenerique
         else {
                 var_dump("non");
                 if (ConnexionUtilisateur::estConnecte()) {
-                    if ($stat) {
-                        $stat->incrementTentative();
-                        $statRepository->update($stat);
+                    if (isset($stat[0])) {
+                        $stat[0]->incrementTentative();
+                        $statRepository->addAll($stat);
                     } else {
                         $statRepository->add(new Stat($artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1, $_SESSION['dico'][$index]['tentative'], 0));
                     }
@@ -295,4 +296,6 @@ class ControleurUtilisateur extends ControleurGenerique
         ]);
 
     }
+
+
 }

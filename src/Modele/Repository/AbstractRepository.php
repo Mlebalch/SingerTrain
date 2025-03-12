@@ -88,6 +88,39 @@ abstract class AbstractRepository
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         return $pdoStatement->execute($this->formatSQLArray($objet));
     }
+    public function addAll(array $list): bool
+    {
+        $columns = $this->getColumnNamesForUpdate();
+        $placeholders = array_map(fn($col) => ":$col", $columns);
+        $sql = "INSERT INTO " . $this->getTableName() . " (" . implode(", ", $columns) . ") VALUES ";
+        $values = [];
+        foreach ($list as $value) {
+            /** @var AbstractDataObject $value */
+            $ligne = "(" . implode(", ", $placeholders) . ")";
+            foreach ($this->formatSQLArray($value) as $key => $val)
+            {
+                $ligne = str_replace(":$key", $this->quote($val), $ligne);
+            }
+            $values[] = $ligne;
+        }
+        $sql .= implode(", ", $values);
+        $sql .= " ON DUPLICATE KEY UPDATE ";
+        $updateFields = [];
+        foreach ($columns as $col)
+        {
+            $updateFields[] = "$col = VALUES($col)";
+        }
+        $sql .= implode(", ", $updateFields);
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        return $pdoStatement->execute();
+    }
+
+    private function quote($value)
+    {
+        return ConnexionBaseDeDonnees::getPdo()->quote($value);
+    }
+
 
     public function ajouterSiNexistePas(AbstractDataObject $objet): bool
     {
