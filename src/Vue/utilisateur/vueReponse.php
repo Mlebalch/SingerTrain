@@ -13,14 +13,8 @@ if ($reponse) {
     echo "<h1>Incorrect!</h1>";
 }
 
-echo "<img src=".$image.">";
-echo "<h2>Artist: {$artiste->getNomDeScene()}</h2>";
-echo "<h2>Real name: {$artiste->getNom()} {$artiste->getPrenom()}</h2>";
-echo "<h2>Titre: {$title}</h2>";
-echo "<a href='{$artiste->getLienNautijon()}'>Nautijon</a>";
-
-echo "<h2>Score: {$_SESSION['score']}</h2>";
-echo "<h2>Tentative: {$_SESSION['tentative']}</h2>";
+$titre = preg_replace('/\([^)]*\)/', '', $title);
+$titre = preg_replace('/\s?-\s?.*/', '', $titre);
 function fetchAnimeSongs($music, $artist) {
     $baseUrl = "https://animesongs.org/api/songs/search";
     $query = http_build_query([
@@ -54,18 +48,35 @@ function fetchAnimeSongs($music, $artist) {
     return json_decode($response, true);
 }
 
-$result = fetchAnimeSongs($title, $artiste->getNomDeScene());
+$artistname = $artiste->getNomDeScene();
+if ($artistname == "Queen Bee") {
+    $artistname = "Ziyoou-vachi";
+}
+if ($artistname == "TK from Ling tosite sigure") {
+    $artistname = "TK";
+}
+$result = fetchAnimeSongs($titre, $artistname);
+
+echo "<img src=".$image.">";
+echo "<h2>Artist : {$artiste->getNomDeScene()}</h2>";
+echo "<h2>Real name : {$artiste->getNom()} {$artiste->getPrenom()}</h2>";
+echo "<h2>Titre : ".$title."</h2>";
+echo "<a href='{$artiste->getLienNautijon()}'>Nautijon</a>";
 
 if (isset($result['songs']) && is_array($result['songs'])) {
-            echo "<h2>Anime : " . ($result['songs'][0]['anime'][0]['name'] ?? 'Inconnu') . "</h2><br>";
+        foreach ($result['songs'] as $song) {
+            if ($song['version'] == null) {
+            echo "<h2>Anime : " . $song['anime'][0]['name'] . "</h2><br>";
+            break;
+            }
         }
+    }
 else {
     echo "<h2>Aucune chanson trouvée</h2>";
 }
-
+echo "<h2>Score: {$_SESSION['score']}</h2>";
+echo "<h2>Tentative: {$_SESSION['tentative']}</h2>";
 echo "<br>
 <br><a href='?controleur=utilisateur&action=next'>Next</a>
-<br>
-<br>
-<br>
-<br>";
+<br><br>
+<br><br>";

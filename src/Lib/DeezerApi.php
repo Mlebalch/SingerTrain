@@ -14,17 +14,22 @@ class DeezerApi
         Session::getInstance()->ecrire('dico', []);
         foreach ($lienDeezer as $lien) {
             $curl = curl_init();
-            $artistId = $lien;
+            $artistId = $lien;  
             $url = "https://api.deezer.com/artist/" . $artistId . "/top?limit=30";
+
+            $headers = [
+                'Accept-Language: ja', 
+                'X-Region: jp'         
+            ];
 
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);  // Ajouter les en-têtes
 
             $result = curl_exec($curl);
             $err = curl_error($curl);
             curl_close($curl);
-
             if ($err) {
                 echo "cURL Error #:" .   $err;
             } else {

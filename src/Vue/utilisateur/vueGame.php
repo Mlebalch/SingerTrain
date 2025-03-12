@@ -5,9 +5,6 @@ use App\Modele\HTTP\Session;
 
 $volume = isset($_COOKIE["volume"]) ? $_COOKIE["volume"] : 0.15;
 
-$songs = isset($_SESSION['songs']) ? $_SESSION['songs'] : [];
-$artistes = isset($_SESSION['artistes']) ? $_SESSION['artistes'] : []; // Assurez-vous de définir cette variable ou de la récupérer d'une autre manière
-
 echo "<h1>Guess the artist</h1>";
 echo "<p>Score: {".$_SESSION['score']."}</p>";
 $index = rand(0, count($_SESSION['dico']) - 1);
