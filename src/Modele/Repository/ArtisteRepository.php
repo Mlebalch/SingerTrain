@@ -19,7 +19,7 @@ class ArtisteRepository extends AbstractRepository
 
     protected function getColumnNames(): array
     {
-        return ['nom_de_scene', 'prenom', 'nom', 'lien_deezer', 'lien_nautijon'];
+        return ['nom_de_scene', 'prenom', 'nom', 'lien_deezer', 'lien_nautijon', 'image'];
     }
 
     protected function formatSQLArray(AbstractDataObject $objet): array
@@ -31,6 +31,7 @@ class ArtisteRepository extends AbstractRepository
             'nom' => $objet->getNom(),
             'lien_deezer' => $objet->getLienDeezer(),
             'lien_nautijon' => $objet->getLienNautijon(),
+            'image' => $objet->getImage(),
         );
     }
 
@@ -42,6 +43,7 @@ class ArtisteRepository extends AbstractRepository
             $objetFormatTableau['nom'],
             $objetFormatTableau['lien_deezer'],
             $objetFormatTableau['lien_nautijon'],
+            $objetFormatTableau['image']
         );
     }
 

@@ -21,7 +21,7 @@ class ControleurAdmin extends ControleurGenerique
     public static function enregistrerArtiste()
     {
         $artisteid = (new DeezerApi())->add($_REQUEST['recherche']);
-        if ($artisteid != 0) {
+        if ($artisteid ["id"] != null) {
             $artiste = $_REQUEST['aritste'];
             $artisteModifie = '';
             foreach (str_split($artiste) as $char) {
@@ -31,7 +31,7 @@ class ControleurAdmin extends ControleurGenerique
                     $artisteModifie .= $char;
                 }
             }
-            (new ArtisteRepository())->add(new Artiste($_REQUEST['aritste'], $_REQUEST['prenom'],$_REQUEST['nom'], $artisteid, "https://www.nautiljon.com/people/".$artisteModifie.".html"));
+            (new ArtisteRepository())->add(new Artiste($_REQUEST['aritste'], $_REQUEST['prenom'],$_REQUEST['nom'], $artisteid["id"], "https://www.nautiljon.com/people/".$artisteModifie.".html", $artisteid["image"]));
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Ajouter un artiste",
                 "cheminCorpsVue" => "admin/vueFormulaireAjoutArtiste.php",

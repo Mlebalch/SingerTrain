@@ -288,11 +288,13 @@ class ControleurUtilisateur extends ControleurGenerique
     public static function afficherVueStat()
     {
         $stat = (new StatRepository())->getbylogin(ConnexionUtilisateur::getUtilisateurConnecte()->getLogin());
+        $image = (new ArtisteRepository())->get();
         self::afficherVue("vueGenerale.php", [
             "titre" => "Stat",
             "cheminCorpsVue" => "utilisateur/vueStat.php",
             "messagesFlash" => MessageFlash::lireTousMessages(),
             "stat" => $stat,
+            "image" => $image,
         ]);
 
     }

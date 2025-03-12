@@ -61,7 +61,7 @@ class DeezerApi
         }
 }
 
-    public function add(string $recherche) : int
+    public function add(string $recherche) : array
     {
         $curl = curl_init();
 
@@ -83,11 +83,12 @@ class DeezerApi
             if (isset($data['data']) && count($data['data']) > 0) {
                 $data = $data['data'][0];
                 $artistId = $data['artist']['id'];
-                return $artistId;
+                $artistImage = $data['artist']['picture_medium'];
+                return ['id' => $artistId, 'image' => $artistImage];
             } else {
                 echo "No artist data available.";
             }
         }
-        return 0;
+        return ['id' => null, 'image' => null];
     }
 }
