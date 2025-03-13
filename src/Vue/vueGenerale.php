@@ -34,7 +34,8 @@ use App\Lib\ConnexionUtilisateur;
                    echo "<li>";
                    echo "<a href=''> <img src='../ressources/icons/setting.svg' alt='' class='icon'> Setting</a>";
                    echo "<ul><li><a href='?controleur=admin&action=afficherVueFormulaireUtilisateurAdmin'>Crées un admin</a></li> ";
-                   echo "<li><a href='?controleur=admin&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li> </ul>";
+                   echo "<li><a href='?controleur=admin&action=afficherVueFormulaireAjoutArtiste'>Ajout d'Artiste</a></li> ";
+                   echo "<li><a href='?controleur=admin&action=afficherVueModificationArtiste'>Modification d'Artiste</a></li> </ul>";
                      echo "</li>";
                }
                 echo "<li><a href='?controleur=utilisateur&action=afficherVueStat'>Stat</a></li>";
