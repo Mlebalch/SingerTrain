@@ -5,15 +5,15 @@ use App\Modele\DataObject\Artiste;
 <form method="post" action="">
     <h3>Modifier un Artiste</h3>
     <div>
-        <select name="artiste" id="artistSelect" required>
-            <option value=""  selected disabled>Selectionner un Artiste</option>
+        <input list="artistList" name="artiste" id="artistSelect" required>
+        <datalist id="artistList">
             <?php
             foreach ($artistes as $user) {
                 /** @var Artiste $user */
                 echo "<option value=\"{$user->getNomDeScene()}\" data-prenom=\"{$user->getPrenom()}\" data-nom=\"{$user->getNom()}\" data-lien-deezer=\"{$user->getLienDeezer()}\" data-lien-nautijon=\"{$user->getLienNautijon()}\">{$user->getNomDeScene()}</option>";
             }
             ?>
-        </select>
+        </datalist>
     </div>
     <div>
         <label for="prenom">Prenom:</label>
@@ -58,12 +58,14 @@ use App\Modele\DataObject\Artiste;
 </form>
 
 <script>
-document.getElementById('artistSelect').addEventListener('change', function() {
-    var selectedOption = this.options[this.selectedIndex];
-    document.getElementById('prenom').value = selectedOption.getAttribute('data-prenom');
-    document.getElementById('nom').value = selectedOption.getAttribute('data-nom');
-    document.getElementById('lien_deezer').value = selectedOption.getAttribute('data-lien-deezer');
-    document.getElementById('lien_nautijon').value = selectedOption.getAttribute('data-lien-nautijon');
+document.getElementById('artistSelect').addEventListener('input', function() {
+    var selectedOption = document.querySelector('#artistList option[value="' + this.value + '"]');
+    if (selectedOption) {
+        document.getElementById('prenom').value = selectedOption.getAttribute('data-prenom');
+        document.getElementById('nom').value = selectedOption.getAttribute('data-nom');
+        document.getElementById('lien_deezer').value = selectedOption.getAttribute('data-lien-deezer');
+        document.getElementById('lien_nautijon').value = selectedOption.getAttribute('data-lien-nautijon');
+    }
 });
 
 document.getElementById('addGroupButton').addEventListener('click', function() {

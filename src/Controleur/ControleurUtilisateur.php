@@ -33,39 +33,48 @@ class ControleurUtilisateur extends ControleurGenerique
 
         $_SESSION['score'] = 0;
         $_SESSION['tentative'] = 0;
-       $lienDeezer =  (new ArtisteRepository())->getRand();
-       $resulte = [];
-       foreach ($lienDeezer as $row) {
-            $resulte[] = $row->getLienDeezer();
+       $artiste =  (new ArtisteRepository())->getRand();
+        Session::getInstance()->ecrire('lien', []);
+       foreach ($artiste as $row) {
+           $_SESSION['lien'][] =$row->getLienDeezer();
        }
-      (new DeezerApi)->get($resulte);
+
+      (new DeezerApi)->get($_SESSION['lien'], 3);
 
        self::afficherVue("vueGenerale.php", [
             "titre" => "Game",
             "cheminCorpsVue" => "utilisateur/vueGame.php",
             "messagesFlash" => MessageFlash::lireTousMessages(),
+           "artiste" => $artiste,
 
         ]);
     }
 
-    public static function next(){
-
-        if ($_SESSION['dico'] == null){
+  public static function next()
+{
+    if (isset($_REQUEST['stop'])) {
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Game",
+            "cheminCorpsVue" => "utilisateur/vueScoreFinal.php",
+            "messagesFlash" => MessageFlash::lireTousMessages(),
+        ]);
+    } else {
+        if (empty($_SESSION['lien'])) {
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Game",
                 "cheminCorpsVue" => "utilisateur/vueScoreFinal.php",
                 "messagesFlash" => MessageFlash::lireTousMessages(),
             ]);
-        }
-        else{
+        } else {
+            (new DeezerApi)->get($_SESSION['lien'], 3);
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Game",
                 "cheminCorpsVue" => "utilisateur/vueGame.php",
                 "messagesFlash" => MessageFlash::lireTousMessages(),
             ]);
-
         }
     }
+}
 
 
     public static function reponse()

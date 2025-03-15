@@ -8,13 +8,17 @@ class DeezerApi
     /**
      * @param array $lienDeezer
      */
-    public function get(array $lienDeezer)
+    public function get(array $lienDeezer, int $nbChansons) : void
     {
         // Clear the session data
         Session::getInstance()->ecrire('dico', []);
-        foreach ($lienDeezer as $lien) {
+        $i = 0;
+        while ($i < $nbChansons) {
+            if (count($lienDeezer) == 0) {
+                break;
+            }
             $curl = curl_init();
-            $artistId = $lien;  
+            $artistId = $lienDeezer[0];
             $url = "https://api.deezer.com/artist/" . $artistId . "/top?limit=30";
 
             $headers = [
@@ -58,6 +62,8 @@ class DeezerApi
 
             $data = json_decode($result, true);
             $_SESSION ['dico'][] = ['song' => $randomTrack['preview'],'titre' => $randomTrack['title'] ,'artiste' => $data['name'], 'img' => $data['picture_medium'], 'tentative' => 0];
+            array_splice($_SESSION['lien'], 0, 1);
+            $i++;
         }
 }
 

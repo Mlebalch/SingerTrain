@@ -11,7 +11,7 @@ use App\Modele\DataObject\Utilisateur;
         </thead>
         </table>
     ";
-    echo "<form method=\"get\" action=\"\">";
+    echo "<form method=\"post\" action=\"\">";
     echo "<table>";
     echo "<tr>";
     echo "<td><label for=\"login_id\">Login</label> :</td>";

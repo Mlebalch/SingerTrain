@@ -77,6 +77,11 @@ else {
 echo "<h2>Score: {$_SESSION['score']}</h2>";
 echo "<h2>Tentative: {$_SESSION['tentative']}</h2>";
 echo "<br>
-<br><a href='?controleur=utilisateur&action=next'>Next</a>
+<br>
+    <form method=\"post\" action=\"\">
+        <input type=\"submit\" value=\"Next\" name='next'>
+        <input type=\"submit\" value=\"Stop\" name='stop'>
+        <input type='hidden' name='controleur' value='utilisateur'>
+        <input type='hidden' name='action' value='next'>
 <br><br>
 <br><br>";
