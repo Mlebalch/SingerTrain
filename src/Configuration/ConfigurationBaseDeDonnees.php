@@ -21,7 +21,7 @@ class ConfigurationBaseDeDonnees
         'login' => 'lebalchm',
         // A l'IUT, c'est le même mdp que PhpMyAdmin
         // Sur votre machine personelle, vous avez creez ce mdp a l'installation
-        'motDePasse' => '6XR3k@lDMzhdnOe3'
+        'motDePasse' => '8fIb9g23qPuXgO2N'
     );
 
     static public function getLogin(): string

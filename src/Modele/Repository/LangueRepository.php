@@ -10,7 +10,7 @@ class LangueRepository extends AbstractRepository
 
     public function getTableName(): string
     {
-        return "langue";
+        return "Langue";
     }
 
     public function getPrimaryKeyNames(): array
@@ -20,12 +20,12 @@ class LangueRepository extends AbstractRepository
 
     public function getColumnNames(): array
     {
-        return ["langue"];
+        return ["langue", "Accept_Language", "X_Region"];
     }
 
     public function getColumnNamesForUpdate(): array
     {
-        return ["langue"];
+        return ["Accept_Language", "X_Region"];
     }
 
     public function formatSQLArray(AbstractDataObject $objet): array
@@ -33,6 +33,8 @@ class LangueRepository extends AbstractRepository
         /** @var Langue $objet */
         return array(
             "langue" => $objet->getLangue(),
+            "Accept_Language" => $objet->getAcceptLanguage(),
+            "X_Region" => $objet->getXRegion(),
         );
     }
 
@@ -40,7 +42,8 @@ class LangueRepository extends AbstractRepository
     {
         return new Langue(
             $objetFormatTableau['langue'],
+            $objetFormatTableau['Accept_Language'],
+            $objetFormatTableau['X_Region'],
         );
     }
-
 }

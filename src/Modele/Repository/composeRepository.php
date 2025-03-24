@@ -2,6 +2,7 @@
 
 namespace App\Modele\Repository;
 
+use App\Lib\ConnexionBaseDeDonnees;
 use App\Modele\DataObject\AbstractDataObject;
 
 use App\Modele\DataObject\compose;
@@ -9,43 +10,55 @@ use App\Modele\DataObject\compose;
 class composeRepository extends AbstractRepository
 {
 
-        public function getTableName(): string
-        {
-            return "compose";
-        }
+    public function getTableName(): string
+    {
+        return "compose";
+    }
 
-        public function getPrimaryKeyNames(): array
-        {
-            return ["id"];
-        }
+    public function getPrimaryKeyNames(): array
+    {
+        return ["nom_de_scene"];
+    }
 
-        public function getColumnNames(): array
-        {
-            return ["id", "id_categorie", "id_langue"];
-        }
+    public function getColumnNames(): array
+    {
+        return ["nom_de_scene", "langue", "type"];
+    }
 
-        public function getColumnNamesForUpdate(): array
-        {
-            return ["id_categorie", "id_langue"];
-        }
+    public function getColumnNamesForUpdate(): array
+    {
+        return ["langue", "type"];
+    }
 
-        public function formatSQLArray(AbstractDataObject $objet): array
-        {
-            /** @var compose $objet */
-            return array(
-                "id" => $objet->getId(),
-                "id_categorie" => $objet->getIdCategorie(),
-                "id_langue" => $objet->getIdLangue(),
-            );
-        }
+    public function formatSQLArray(AbstractDataObject $objet): array
+    {
+        /** @var compose $objet */
+        return array(
+            "nom_de_scene" => $objet->getNomDeScene(),
+            "langue" => $objet->getLangue(),
+            "type" => $objet->getType(),
+        );
+    }
 
-        public function constructFromSQLArray(array $objetFormatTableau): AbstractDataObject
-        {
-            return new compose(
-                $objetFormatTableau['id'],
-                $objetFormatTableau['id_categorie'],
-                $objetFormatTableau['id_langue'],
-            );
-        }
+    public function constructFromSQLArray(array $objetFormatTableau): AbstractDataObject
+    {
+        return new compose(
+            $objetFormatTableau['nom_de_scene'],
+            $objetFormatTableau['langue'],
+            $objetFormatTableau['type'],
+        );
+    }
 
+
+    public function getByRand( string $langue, string $type): array
+    {
+        $sql = "SELECT * FROM compose WHERE langue = :langue AND type = :type ORDER BY RAND() LIMIT 1";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement->execute(['langue' => $langue, 'type' => $type]);
+        $result = array();
+        foreach ($pdoStatement->fetchAll() as $row) {
+            $result[] = $this->constructFromSQLArray($row);
+        }
+        return $result;
+    }
 }

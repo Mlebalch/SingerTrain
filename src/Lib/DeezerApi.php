@@ -8,11 +8,12 @@ class DeezerApi
     /**
      * @param array $lienDeezer
      */
-    public function get(array $lienDeezer, int $nbChansons) : void
+    public function get(array $lienDeezer, int $nbChansons , string $accept_Language , string $x_Region ) : void
     {
         // Clear the session data
         Session::getInstance()->ecrire('dico', []);
         $i = 0;
+
         while ($i < $nbChansons) {
             if (count($lienDeezer) == 0) {
                 break;
@@ -22,8 +23,8 @@ class DeezerApi
             $url = "https://api.deezer.com/artist/" . $artistId . "/top?limit=30";
 
             $headers = [
-                'Accept-Language: ja', 
-                'X-Region: jp'         
+                'Accept-Language: ' . $accept_Language,
+                'X-Region: ' . $x_Region
             ];
 
             curl_setopt($curl, CURLOPT_URL, $url);

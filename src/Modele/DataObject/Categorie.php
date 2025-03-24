@@ -8,10 +8,10 @@ class Categorie extends AbstractDataObject
     private string $type;
     private string $description;
 
-    public function __construct(string $type, string $description)
+    public function __construct(string $type, ?string $description)
     {
         $this->type = $type;
-        $this->description = $description;
+        $this->description = $description ?? '';
     }
 
     public function getType(): string

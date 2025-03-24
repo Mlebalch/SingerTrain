@@ -9,6 +9,9 @@ use App\Lib\MessageFlash;
 use App\Lib\ConnexionUtilisateur;
 use App\Modele\HTTP\Session;
 use App\Modele\Repository\ArtisteRepository;
+use App\Modele\Repository\CategorieRepository;
+use App\Modele\Repository\composeRepository;
+use App\Modele\Repository\LangueRepository;
 use App\Modele\Repository\StatRepository;
 use App\Modele\Repository\UtilisateurRepository;
 use App\Modele\DataObject\Utilisateur;
@@ -28,28 +31,46 @@ class ControleurUtilisateur extends ControleurGenerique
             "messagesFlash" => MessageFlash::lireTousMessages(),
         ]);
     }
-    public static function launch()
+
+    public static function afficherChoixLangue(): void
     {
-
-        $_SESSION['score'] = 0;
-        $_SESSION['tentative'] = 0;
-       $artiste =  (new ArtisteRepository())->getRand();
-        Session::getInstance()->ecrire('lien', []);
-       foreach ($artiste as $row) {
-           $_SESSION['lien'][] =$row->getLienDeezer();
-       }
-
-      (new DeezerApi)->get($_SESSION['lien'], 3);
-
-       self::afficherVue("vueGenerale.php", [
-            "titre" => "Game",
-            "cheminCorpsVue" => "utilisateur/vueGame.php",
+        $langues = (new LangueRepository())->get();
+        self::afficherVue("vueGenerale.php", [
+            "titre" => "Choix du jeu",
+            "cheminCorpsVue" => "utilisateur/vueChoixLangue.php",
             "messagesFlash" => MessageFlash::lireTousMessages(),
-           "artiste" => $artiste,
-
+            "langues" => $langues,
         ]);
     }
 
+public static function launch()
+{
+    $langue = $_REQUEST['langue'];
+    $categorie = $_REQUEST['categorie'];
+    $_SESSION['score'] = 0;
+    $_SESSION['tentative'] = 0;
+    $artiste = (new composeRepository())->getByRand($langue, $categorie);
+    Session::getInstance()->ecrire('lien', []);
+    foreach ($artiste as $row) {
+        $lienDeezer = (new ArtisteRepository())->getByPrimaryKeys([$row->getNomDeScene()])->getLienDeezer();
+        if (!isset($_SESSION['lien']) || !is_array($_SESSION['lien'])) {
+            $_SESSION['lien'] = [];
+        }
+        $_SESSION['lien'][] = $lienDeezer;
+    }
+    $x_Region = (new LangueRepository())->getByPrimaryKeys([$langue])->getXRegion();
+    $accept_Language = (new LangueRepository())->getByPrimaryKeys([$langue])->getAcceptLanguage();
+
+    (new DeezerApi)->get($_SESSION['lien'], 3, $accept_Language, $x_Region);
+
+    self::afficherVue("vueGenerale.php", [
+        "titre" => "Game",
+        "cheminCorpsVue" => "utilisateur/vueGame.php",
+        "messagesFlash" => MessageFlash::lireTousMessages(),
+        "artiste" => $artiste,
+    ]);
+
+}
   public static function next()
 {
     if (isset($_REQUEST['stop'])) {

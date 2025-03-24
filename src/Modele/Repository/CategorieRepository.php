@@ -2,6 +2,7 @@
 
 namespace App\Modele\Repository;
 
+use App\Lib\ConnexionBaseDeDonnees;
 use App\Modele\DataObject\AbstractDataObject;
 use App\Modele\DataObject\Categorie;
 
@@ -10,7 +11,7 @@ class CategorieRepository extends AbstractRepository
 
     public function getTableName(): string
     {
-        return "categorie";
+        return "Categorie";
     }
 
     public function getPrimaryKeyNames(): array
@@ -41,8 +42,20 @@ class CategorieRepository extends AbstractRepository
     {
         return new Categorie(
             $objetFormatTableau['type'],
-            $objetFormatTableau['description'],
+            $objetFormatTableau['description'] ?? null,
         );
     }
 
+
+public function getByLangue(string $langue): array
+{
+    $sql = "SELECT DISTINCT( Categorie.type), Categorie.description FROM " . $this->getTableName() . " JOIN compose ON Categorie.type = compose.type WHERE compose.langue = :langue";
+    $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+    $pdoStatement->execute(['langue' => $langue]);
+    $resultat = array();
+    foreach ($pdoStatement->fetchAll() as $row) {
+        $resultat[] = $this->constructFromSQLArray($row);
+    }
+    return $resultat;
+}
 }
