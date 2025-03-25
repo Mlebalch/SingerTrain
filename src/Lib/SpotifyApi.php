@@ -63,15 +63,5 @@ class SpotifyApi
 
         return json_decode($response, true);
     }
-}
-
-// Exécution du test
-$spotify = SpotifyApi::getInstance();
-$playlists = $spotify->searchPlaylists("rap français");
-
-echo "<pre>";
-print_r($playlists);
-echo "</pre>";
-?>
 
 }
