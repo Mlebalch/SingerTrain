@@ -90,15 +90,14 @@ abstract class AbstractRepository
     }
     public function addAll(array $list): bool
     {
-        $columns = $this->getColumnNamesForUpdate();
+        $columns = $this->getColumnNames();
         $placeholders = array_map(fn($col) => ":$col", $columns);
         $sql = "INSERT INTO " . $this->getTableName() . " (" . implode(", ", $columns) . ") VALUES ";
         $values = [];
         foreach ($list as $value) {
             /** @var AbstractDataObject $value */
             $ligne = "(" . implode(", ", $placeholders) . ")";
-            foreach ($this->formatSQLArray($value) as $key => $val)
-            {
+            foreach ($this->formatSQLArray($value) as $key => $val) {
                 $ligne = str_replace(":$key", $this->quote($val), $ligne);
             }
             $values[] = $ligne;
@@ -106,8 +105,7 @@ abstract class AbstractRepository
         $sql .= implode(", ", $values);
         $sql .= " ON DUPLICATE KEY UPDATE ";
         $updateFields = [];
-        foreach ($columns as $col)
-        {
+        foreach ($columns as $col) {
             $updateFields[] = "$col = VALUES($col)";
         }
         $sql .= implode(", ", $updateFields);

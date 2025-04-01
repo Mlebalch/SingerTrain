@@ -45,9 +45,31 @@ class SpotifyApi
         return self::$instance;
     }
 
-    public function searchPlaylists(string $query, int $limit = 3): array
+
+    public function searchPlaylists(string $query, string $langue ,  int $limit = 1): ?array
     {
-        $url = "https://api.spotify.com/v1/search?q=" . urlencode($query) . "&type=playlist&market=FR&limit=$limit";
+        $url = "https://api.spotify.com/v1/search?q=" . urlencode($query) . "&type=playlist&market=$langue&limit=$limit";
+
+        $headers = [
+            "Authorization: Bearer " . $this->access_token
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        return $data['playlists']['items'][0] ?? null;
+    }
+
+    public function getPlaylistTracks(string $playlist_id): array
+    {
+        $url = "https://api.spotify.com/v1/playlists/$playlist_id/tracks";
 
         $headers = [
             "Authorization: Bearer " . $this->access_token
@@ -63,5 +85,27 @@ class SpotifyApi
 
         return json_decode($response, true);
     }
+
+    public function getArtistGenres(string $artist_id): array
+    {
+        $url = "https://api.spotify.com/v1/artists/$artist_id";
+
+        $headers = [
+            "Authorization: Bearer " . $this->access_token
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+        return $data['genres'] ?? [];
+    }
+
+
 
 }

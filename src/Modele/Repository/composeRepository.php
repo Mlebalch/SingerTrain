@@ -50,15 +50,24 @@ class composeRepository extends AbstractRepository
     }
 
 
-    public function getByRand( string $langue, string $type): array
+    public function getByRand(string $langue, ?string $type = null): array
     {
-        $sql = "SELECT * FROM compose WHERE langue = :langue AND type = :type ORDER BY RAND() LIMIT 1";
+        $sql = "SELECT * FROM compose WHERE langue = :langue";
+        $params = ['langue' => $langue];
+
+        if ($type !== null) {
+            $sql .= " AND type = :type";
+            $params['type'] = $type;
+        }
+
+        $sql .= " ORDER BY RAND()";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $pdoStatement->execute(['langue' => $langue, 'type' => $type]);
+        $pdoStatement->execute($params);
         $result = array();
         foreach ($pdoStatement->fetchAll() as $row) {
             $result[] = $this->constructFromSQLArray($row);
         }
         return $result;
     }
+
 }

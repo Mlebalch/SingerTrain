@@ -2,6 +2,7 @@
 
 namespace App\Controleur;
 
+use App\Lib\animeSongsApi;
 use App\Lib\DeezerApi;
 use App\Lib\Mail;
 use App\Lib\MotDePasse;
@@ -49,7 +50,14 @@ public static function launch()
     $categorie = $_REQUEST['categorie'];
     $_SESSION['score'] = 0;
     $_SESSION['tentative'] = 0;
-    $artiste = (new composeRepository())->getByRand($langue, $categorie);
+    $_SESSION['x_Region'] = (new LangueRepository())->getByPrimaryKeys([$langue])->getXRegion();
+    $_SESSION['accept_Language'] = (new LangueRepository())->getByPrimaryKeys([$langue])->getAcceptLanguage();
+    if ($categorie == "tous") {
+        $artiste = (new composeRepository())->getByRand($langue);
+    }
+    else{
+        $artiste = (new composeRepository())->getByRand($langue, $categorie);
+    }
     Session::getInstance()->ecrire('lien', []);
     foreach ($artiste as $row) {
         $lienDeezer = (new ArtisteRepository())->getByPrimaryKeys([$row->getNomDeScene()])->getLienDeezer();
@@ -58,10 +66,8 @@ public static function launch()
         }
         $_SESSION['lien'][] = $lienDeezer;
     }
-    $x_Region = (new LangueRepository())->getByPrimaryKeys([$langue])->getXRegion();
-    $accept_Language = (new LangueRepository())->getByPrimaryKeys([$langue])->getAcceptLanguage();
 
-    (new DeezerApi)->get($_SESSION['lien'], 3, $accept_Language, $x_Region);
+    (new DeezerApi)->get($_SESSION['lien'], 3, $_SESSION['accept_Language'], $_SESSION['x_Region']);
 
     self::afficherVue("vueGenerale.php", [
         "titre" => "Game",
@@ -87,7 +93,7 @@ public static function launch()
                 "messagesFlash" => MessageFlash::lireTousMessages(),
             ]);
         } else {
-            (new DeezerApi)->get($_SESSION['lien'], 3);
+            (new DeezerApi)->get($_SESSION['lien'], 3, $_SESSION['accept_Language'], $_SESSION['x_Region']);
             self::afficherVue("vueGenerale.php", [
                 "titre" => "Game",
                 "cheminCorpsVue" => "utilisateur/vueGame.php",
@@ -108,6 +114,21 @@ public static function launch()
         $img = $_SESSION['dico'][$index]['img'] ?? null;
         var_dump($reponse);
         var_dump($artiste);
+        $title = preg_replace('/\([^)]*\)/', '', $titre);
+        $title = preg_replace('/\s?-\s?.*/', '', $title);
+
+
+        $artistname = $artiste;
+        if ($artistname == "Queen Bee") {
+            $artistname = "Ziyoou-vachi";
+        }
+        if ($artistname == "TK from Ling tosite sigure") {
+            $artistname = "TK";
+        }
+        $anime = new animeSongsApi();
+        $anime = $anime->fetchAnimeSongs($title, $artistname);
+
+
         if ($titre === null || $img === null) {
             echo "Error: Missing title or image.";
             return;
@@ -121,6 +142,8 @@ public static function launch()
         if (ConnexionUtilisateur::estConnecte()) {
             $stat [] = $statRepository->getByPrimaryKeys([$artiste, ConnexionUtilisateur::getUtilisateurConnecte()->getLogin(), 1]);
         }
+
+
 
 
         if (strtolower($reponse) === strtolower($artiste)) {
@@ -140,13 +163,16 @@ public static function launch()
                 array_splice($_SESSION['dico'], $index, 1);
 
 
-                self::afficherVue("vueGenerale.php", [
+
+
+            self::afficherVue("vueGenerale.php", [
                     "titre" => "Reponse",
                     "cheminCorpsVue" => "utilisateur/vueReponse.php",
                     "artiste" => $singer,
                     "reponse" => true,
                     "title" => $titre,
                     "image" => $img,
+                "anime" => $anime,
                 ]);
         }
         else {
@@ -166,6 +192,7 @@ public static function launch()
                     "reponse" => false,
                     "title" => $titre,
                     "image" => $img,
+                    "anime" => $anime,
                 ]);
             }
 
