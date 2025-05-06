@@ -1,33 +1,36 @@
 <?php
-// vueFormulaireCreationUtilisateur.php
+// vueFormulaireModification.php
+/** @var Utilisateur $utilisateur */
+use App\Modele\DataObject\Utilisateur;
 ?>
 
 <div class="auth-container">
     <div class="neon-box">
-        <h1 class="game-title">Création de compte</h1>
+        <h1 class="game-title">Modification du profil</h1>
 
         <form method="post" class="auth-form">
             <div class="input-group">
                 <label for="login_id" class="neon-label">Identifiant</label>
                 <input type="text"
-                       name="login"
                        id="login_id"
-                       class="neon-input"
-                       required>
-            </div>
-
-            <div class="input-group">
-                <label for="mail_id" class="neon-label">Adresse email</label>
-                <input type="email"
-                       name="mail"
-                       id="mail_id"
-                       class="neon-input"
-                       required>
+                       value="<?= htmlspecialchars($utilisateur->getLogin()) ?>"
+                       class="neon-input disabled"
+                       readonly
+                       disabled>
             </div>
 
             <div class="password-grid">
                 <div class="input-group">
-                    <label for="mdp_id" class="neon-label">Mot de passe</label>
+                    <label for="mdp_id3" class="neon-label">Mot de passe actuel</label>
+                    <input type="password"
+                           name="mdpHache"
+                           id="mdp_id3"
+                           class="neon-input"
+                           required>
+                </div>
+
+                <div class="input-group">
+                    <label for="mdp_id" class="neon-label">Nouveau mot de passe</label>
                     <input type="password"
                            name="mdp"
                            id="mdp_id"
@@ -46,11 +49,10 @@
             </div>
 
             <button type="submit" class="btn-neon">
-                <span class="glow-text">Créer le compte</span>
+                <span class="glow-text">Mettre à jour</span>
             </button>
 
-            <input type="hidden" name="admin" value="user">
-            <input type="hidden" name="action" value="creerUtilisateurDepuisFormulaire">
+            <input type="hidden" name="action" value="modifierUtilisateurDepuisFormulaire">
             <input type="hidden" name="controleur" value="utilisateur">
         </form>
     </div>

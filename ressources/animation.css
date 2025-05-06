@@ -1,0 +1,135 @@
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes neonPulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; text-shadow: 0 0 20px var(--accent-color); }
+    100% { opacity: 0.8; }
+}
+
+.game-title {
+    animation: neonPulse 2s infinite;
+}
+
+@keyframes backgroundScan {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 100%; }
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+            to bottom right,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 100%
+    );
+    animation: backgroundScan 10s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* animations.css */
+@keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; text-shadow: 0 0 10px var(--accent-color); }
+    100% { opacity: 1; }
+}
+
+.flicker {
+    animation: flicker 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.all-categories .pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--accent-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes sidebarEntry {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@media (min-width: 769px) {
+    .sidebar-nav {
+        animation: sidebarEntry 0.5s ease-out;
+    }
+}
+.category-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.category-card:hover::before {
+    opacity: 0.1;
+}
+
+.genre-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+}
+
+.particle {
+    animation: particleFloat 3s infinite ease-out;
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    20% { transform: translateY(-20px) scale(1); opacity: 1; }
+    100% { transform: translateY(-100px) scale(0); opacity: 0; }
+}
+
+
+@keyframes incorrect-shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(10px); }
+    50% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+.incorrect-shake {
+    animation: incorrect-shake 0.4s ease;
+}
+
+@keyframes scoreGlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; text-shadow: 0 0 25px var(--accent-color); }
+}
+
+@keyframes audioWave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
